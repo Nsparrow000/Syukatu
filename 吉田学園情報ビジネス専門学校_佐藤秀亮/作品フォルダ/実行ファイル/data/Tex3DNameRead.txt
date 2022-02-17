@@ -13,6 +13,7 @@ NUM_TEXTURE = 5
 TEXTURE_FILENAME = data/Texture/3D/field000.jpg				//ÇOínñ 
 TEXTURE_FILENAME = data/Texture/3D/Effect000.jpg			//1ÉGÉtÉFÉNÉg
 TEXTURE_FILENAME = data/Texture/3D/CycleEffect00.jpg		//2ÇÌÇ¡Ç©
-TEXTURE_FILENAME = data/Texture/3D/trans001.png				//ÇRãOê’
+TEXTURE_FILENAME = data/Texture/3D/sky001.jpg				//ÇRãÛ
+TEXTURE_FILENAME = data/Texture/3D/trans001.png				//ÇSãOê’
 
 END_SCRIPT
