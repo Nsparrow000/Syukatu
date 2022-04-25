@@ -9,12 +9,28 @@
 #メモ：(このエフェクトの使い道等、書いてください)
 #========================================================================
 EFFECTSTATE3D
-	COLOR = 255 255 57 255			//カラー
-	CHANGECOLOR = 0 0 1 0			//カラー変動値
+	PATTERN = 3				//動きのパターン
 	LIFE = 100						//寿命
-	TRAJECTCOLOR = 255 255 255 255			//先端カラー
-	TRAJECTCHANGECOLOR = 0 0 0 0			//先端カラー変動値
-	MODEL = 12						//軌跡手元モデル
-	TRAJECTMODEL = 14				//軌跡先端モデル
+	ROTATE = -0.01						//回転
+	MOVE = 2.0						//移動
+	SIZE = 20.0						//大きさ
+	ADDSIZE = 50.0					//大きさ変動
+	DENSITY = 1						//粒密度
+	PARTICLESIZE = 0.0						//粒サイズ
+	PARTICLETIME = 1						//粒発生間隔
+	DISTANCE = 126.0						//粒の発生距離
+	ACTIVE = 150						//稼働時間
+	PARTICLEADDSIZE = 0.0						//粒サイズ変更
+	MAXSIZE = 320.0						//フィールド最大サイズ
+	SECONDCOLOR = 255 255 255 255			//パーティクルカラー
+	SECONDADDCOLOR = 0 0 0 0			//パーティクルカラー増減
+	SECONDSYNTHETIC = 0			//パーティクル合成
+	ACTIVEADDSIZE = -1.0					//稼働中の稼働時間
+	POS = 0.0 0.0 0.0			//出現位置
+	COLOR = 255 255 255 60			//カラー
+	CHANGECOLOR = 0 0 0 0			//カラー変動値
+	LIFE = 100						//ライフ
+	TEXTURE = 3						//テクスチャ
+	SYNTHETIC = 1						//合成
 END_EFFECTSTATE3D
 
