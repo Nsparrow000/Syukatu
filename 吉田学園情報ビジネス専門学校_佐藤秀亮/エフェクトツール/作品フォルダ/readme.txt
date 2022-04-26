@@ -1,4 +1,6 @@
-2D・3D両用エフェクトツール　　制作者：佐藤秀亮　syusuke sato
+2D・3D両用エフェクトツール　　
+
+制作者：佐藤秀亮　syusuke sato
 
 ・開発環境
 Visual Studio 2015
