@@ -8,6 +8,10 @@
 
 #include "straight3d.h"
 #include "FieldEffect.h"
+#include "ActiveBillboard.h"
+#include "Rotate3d.h"
+#include "SphereEffect.h"
+#include "ThunderBill.h"
 
 #include <assert.h>
 //*****************************************************************************
@@ -19,6 +23,7 @@ bool CSetEffect3D::bOne = false;
 //*****************************************************************************
 //マクロ
 //*****************************************************************************
+#define CIRCLE (float(rand() % 324) / 100.0f - float(rand() % 324) / 100.0f) //円のマクロ
 
 //*****************************************************************************
 //コンストラクタ
@@ -79,20 +84,13 @@ void CSetEffect3D::Update()
 		}
 	}
 
-	D3DXVECTOR3 move = CControl::Getmove3d();
+	float RandAngle;
+
 	if (m_pKeyboard != NULL)
 	{
 
 		for (int nCnt = 0; nCnt < CControl::GetDensity(); nCnt++)
 		{
-
-			move.x = (float(rand() % (int)CControl::Getmove3d().x)) - (float(rand() % (int)CControl::Getmove3d().x));
-			move.x /= 10;
-			move.y = (float(rand() % (int)CControl::Getmove3d().y)) - (float(rand() % (int)CControl::Getmove3d().y));
-			move.y /= 10;
-			move.z = (float(rand() % (int)CControl::Getmove3d().z)) - (float(rand() % (int)CControl::Getmove3d().z));
-			move.z /= 10;
-
 			switch (CControl::GetPattern())
 			{
 			case(0):
@@ -100,14 +98,34 @@ void CSetEffect3D::Update()
 
 				break;
 			case(1):
-				CStraight3D::Create(pos,
-					D3DXVECTOR3(CControl::GetSize(), CControl::GetSize(), 0.0f),
-					D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
-					move,
-					D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
-					D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
-					CControl::GetTex(), CControl::GetLife(), CStraight3D::STRAIGHT, {},CControl::GetSynthetic());
-				bOne = false;
+				if (m_bOne == false)
+				{
+					m_ParticleTime = CControl::GetParticleTime();
+					m_bOne = true;
+				}
+				else if (m_bOne == true)
+				{
+					m_ParticleTime--;
+					if (m_ParticleTime < 0)
+					{
+						CStraight3D::Create(pos,
+							D3DXVECTOR3(CControl::GetSize(), CControl::GetSize(), 0.0f),
+							D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
+							CControl::Getmove3d(),
+							D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+							D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+							CControl::GetTex(), CControl::GetLife(), CStraight3D::STRAIGHT, {}, CControl::GetSynthetic(),
+							CControl::GetDistance(),
+							(CStraight3D::RAND_PATTEN)CControl::GetType(),
+							(CStraight3D::POS_PATTERN)CControl::GetSecondType(),
+							D3DXVECTOR2(CControl::GetTexMoveU(), CControl::GetTexMoveV()),
+							CControl::GetTexNum(),
+							CControl::GetAnimCont(),
+							D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()));
+						bOne = false;
+						m_bOne = false;
+					}
+				}
 
 				break;
 			case(2):
@@ -133,8 +151,79 @@ void CSetEffect3D::Update()
 						CControl::GetParticleAddSize(),
 						CControl::GetParticleSize(),
 						CControl::GetParticleTime(),
-						CControl::GetAvctiveAddSize(),0,0,0);
+						CControl::GetAvctiveAddSize(),0,(bool)0,0);
 				}
+				break;
+			case(4):
+				if (m_pKeyboard->GetKey(DIK_SPACE) == true)
+				{
+					CActiveBillBoard::Create(D3DXVECTOR3(0.0f, 100.0f, 0.0f),
+						D3DXVECTOR3(CControl::GetSize(), 0.0f, CControl::GetSize()),
+						D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
+						CControl::Getmove3d(),
+						D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+						D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+						CControl::GetTex(), 700,
+						CControl::GetSynthetic(), CControl::GetActiveTime(),
+						CControl::GetMaxSize(), CControl::GetChangeSize(), 0, 0,
+						D3DXVECTOR2(CControl::GetTexMoveU(), CControl::GetTexMoveV()),
+						D3DXVECTOR2(CControl::GetTexNum().x, CControl::GetTexNum().y),
+						CControl::GetAnimCont(),
+						D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()));
+				}
+				break;
+			case(5):
+				if (m_pKeyboard->GetKey(DIK_SPACE) == true)
+				{
+					RandAngle = CIRCLE;
+
+					CRotate3D::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f,50.0f,0.0f), {},
+						D3DXVECTOR3(CControl::GetSize(), CControl::GetSize(),0.0f),
+						D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
+						D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+						D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+						CControl::GetDistance(),
+						CControl::Getmove3d().x, RandAngle,CControl::GetRotate(),
+						CControl::GetTex(),CControl::GetSynthetic(),CControl::GetLife(),
+						CControl::GetParticleTime(),
+						CControl::GetSecondTime(),
+						CControl::GetMaxSize());
+				}
+
+				break;
+			case(6):
+				if (m_pKeyboard->GetKey(DIK_SPACE) == true)
+				{
+					CSphereEffect::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f), CControl::GetRotate(),
+						CControl::GetSize(), CControl::GetTex(),
+						D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+						D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+						CControl::GetLife(), CControl::GetSynthetic(), CControl::GetChangeSize(),
+						CControl::GetVtx(),(CSphereEffect::SPHERE_TYPE)CControl::GetType(),
+						D3DXVECTOR2(CControl::GetTexMoveU(),CControl::GetTexMoveV()),CControl::GetTexNum(),
+						CControl::GetAnimCont(),
+						D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()));
+				}
+				break;
+			case(7):
+				if (m_pKeyboard->GetKey(DIK_SPACE) == true)
+				{
+					CThunderBill::Create(D3DXVECTOR3(0.0f, 0.0f, 0.0f),
+						D3DXVECTOR3(CControl::GetSize(), CControl::GetSize(), 0.0f),
+						D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
+						D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+						D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+						CControl::GetTex(), CControl::GetLife(),
+						CControl::GetDistance(),
+						D3DXVECTOR2(CControl::GetTexMoveU(), CControl::GetTexMoveV()), CControl::GetTexNum(),
+						CControl::GetAnimCont(),
+						D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()),
+						CControl::GetHigth(),
+						D3DXVECTOR3(CControl::GetParticleSize(), CControl::GetParticleSize(), {}),
+						CControl::GetSynthetic());
+				}
+				break;
+			case(8):
 				break;
 			default:
 				assert(false);

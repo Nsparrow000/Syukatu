@@ -39,6 +39,9 @@ HRESULT CPlane::Init(D3DXVECTOR3 size, D3DXVECTOR3 pos, D3DXVECTOR2 Tex)
 		&m_pVtxBuff,
 		NULL);
 
+
+	m_TexNum = Tex;
+
 	m_size = size;
 	SetVtxMax(size);
 	SetVtxMin(-size);
@@ -51,16 +54,19 @@ HRESULT CPlane::Init(D3DXVECTOR3 size, D3DXVECTOR3 pos, D3DXVECTOR2 Tex)
 	pVtx[1].pos = D3DXVECTOR3(size.x, size.y, size.z);
 	pVtx[2].pos = D3DXVECTOR3(-size.x, -size.y, -size.z);
 	pVtx[3].pos = D3DXVECTOR3(size.x, -size.y, -size.z);
+
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	pVtx[2].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	pVtx[3].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
+
 	//頂点カラー
 	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 	pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 	pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+
 	//テクスチャ座標
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
 	pVtx[1].tex = D3DXVECTOR2(Tex.x, 0.0f);
@@ -165,6 +171,9 @@ CPlane *CPlane::Create(D3DXVECTOR3 size, D3DXVECTOR3 pos, D3DXVECTOR2 Tex)
 	return pPlane;
 }
 
+//=============================================================================
+// サイズセット
+//=============================================================================
 void CPlane::SetSize(D3DXVECTOR3 size)
 {
 	//m_size = size;
@@ -180,6 +189,9 @@ void CPlane::SetSize(D3DXVECTOR3 size)
 	m_pVtxBuff->Unlock();
 }
 
+//=============================================================================
+// 色セット
+//=============================================================================
 void CPlane::ChangeColor(D3DXCOLOR col)
 {
 	VERTEX_3D *pVtx; //頂点情報へのポインタ
@@ -202,7 +214,7 @@ void CPlane::CreateTextureFiled()
 	// 頂点情報を設定
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();//デバイスの取得
 
-																	 //ファイル読み込み
+	//ファイル読み込み
 	char aFile[256];
 	FILE *pFile = fopen(TEXTURE_FILENAME_3D, "r");
 
@@ -269,10 +281,10 @@ void CPlane::ChangeSize(D3DXVECTOR3 size)
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
 	//頂点座標の設定
-	pVtx[0].pos = D3DXVECTOR3(-size.x, size.y, size.z);
-	pVtx[1].pos = D3DXVECTOR3(size.x, size.y, size.z);
-	pVtx[2].pos = D3DXVECTOR3(-size.x, -size.y, -size.z);
-	pVtx[3].pos = D3DXVECTOR3(size.x, -size.y, -size.z);
+	pVtx[0].pos = D3DXVECTOR3(-size.x, size.y	, size.z);
+	pVtx[1].pos = D3DXVECTOR3(size.x, size.y	, size.z);
+	pVtx[2].pos = D3DXVECTOR3(-size.x, -size.y	, -size.z);
+	pVtx[3].pos = D3DXVECTOR3(size.x, -size.y	, -size.z);
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
@@ -300,3 +312,84 @@ void CPlane::SetPosField(D3DXVECTOR3 pos, D3DXVECTOR3 Size, float Rotate, float 
 
 }
 
+//=============================================================================
+//サイズ変更
+//=============================================================================
+void CPlane::BillboardSize(float size)
+{
+	VERTEX_3D*pVtx;//頂点情報へのポインタ
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//頂点座標の設定
+	pVtx[0].pos = D3DXVECTOR3(-size, size, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(size, size, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(-size, -size, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(size, -size, 0.0f);
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//=============================================================================
+//テクスチャ移動
+//=============================================================================
+void CPlane::TexturMove(D3DXVECTOR2 MoveTex)
+{
+	VERTEX_3D*pVtx;//頂点情報へのポインタ
+	m_TexMove += MoveTex;
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//テクスチャ座標
+	pVtx[0].tex = D3DXVECTOR2(m_TexMove.x				, m_TexMove.y);
+	pVtx[1].tex = D3DXVECTOR2(m_TexNum.x + m_TexMove.x	, m_TexMove.y);
+	pVtx[2].tex = D3DXVECTOR2(m_TexMove.x				, m_TexNum.y + m_TexMove.y);
+	pVtx[3].tex = D3DXVECTOR2(m_TexNum.x + m_TexMove.x	, m_TexNum.y + m_TexMove.y);
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}
+
+//=============================================================================
+//テクスチャパターン
+//=============================================================================
+void CPlane::SetTexAnim(D3DXVECTOR2 TexPattern, D3DXVECTOR2 TexAnimSize)
+{
+	VERTEX_3D*pVtx;//頂点情報へのポインタ
+
+	m_nSplit = TexPattern;
+
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//テクスチャ座標
+	pVtx[0].tex = D3DXVECTOR2(m_TexNum.x + m_nSplit.x * TexAnimSize.x + m_TexMove.x					, m_TexNum.y + m_nSplit.y * TexAnimSize.y + m_TexMove.y);
+	pVtx[1].tex = D3DXVECTOR2(m_TexNum.x + m_nSplit.x * TexAnimSize.x + TexAnimSize.x + m_TexMove.x	, m_TexNum.y + m_nSplit.y * TexAnimSize.y + m_TexMove.y);
+	pVtx[2].tex = D3DXVECTOR2(m_TexNum.x + m_nSplit.x * TexAnimSize.x + m_TexMove.x					, m_TexNum.y + m_nSplit.y *  + TexAnimSize.y + TexAnimSize.y + m_TexMove.y);
+	pVtx[3].tex = D3DXVECTOR2(m_TexNum.x + m_nSplit.x * TexAnimSize.x + TexAnimSize.x + m_TexMove.x	, m_TexNum.y + m_nSplit.y *  +TexAnimSize.y + TexAnimSize.y + m_TexMove.y);
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+
+}
+
+//=============================================================================
+//ビルボード座標いじり
+//=============================================================================
+void CPlane::SetPosBill(D3DXVECTOR3 pos, D3DXVECTOR3 pos2, D3DXVECTOR3 pos3, D3DXVECTOR3 pos4)
+{
+	VERTEX_3D*pVtx;//頂点情報へのポインタ
+	//頂点バッファをロックし、頂点データへのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+
+	//頂点座標の設定
+	pVtx[0].pos = pos;
+	pVtx[1].pos = pos2;
+	pVtx[2].pos = pos3;
+	pVtx[3].pos = pos4;
+
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
+}

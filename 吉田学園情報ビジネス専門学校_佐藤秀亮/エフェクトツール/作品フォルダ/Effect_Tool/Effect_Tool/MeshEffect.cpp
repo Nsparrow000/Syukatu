@@ -58,7 +58,6 @@ HRESULT CMeshEffect::Init( D3DXVECTOR3 Vtxpos1, D3DXVECTOR3 Vtxpos2, D3DXVECTOR3
 	//頂点バッファをロックし、頂点データへのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void **)&pVtx, 0);
 
-
 	//法線ベクトルの設定
 	pVtx[0].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
 	pVtx[1].nor = D3DXVECTOR3(0.0f, 1.0f, 0.0f);
@@ -130,7 +129,6 @@ void CMeshEffect::Update()
 		m_bUninit = true;
 	}
 
-
 	if (m_bUninit == true)
 	{
 		Uninit();
@@ -151,14 +149,14 @@ void CMeshEffect::Draw()
 	pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 	pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 
-	if (CControl::GetSynthetic() == 0)
+	if (m_Synthetic == 0)
 	{
 		//加算合成関係
 		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 		pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 		pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 	}
-	else if (CControl::GetSynthetic() == 1)
+	else if (m_Synthetic == 1)
 	{
 		//減算合成の設定
 		pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
@@ -237,7 +235,7 @@ void CMeshEffect::CreateTextureMesh(void)
 	// 頂点情報を設定
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();//デバイスの取得
 
-																	 //ファイル読み込み
+	//ファイル読み込み
 	char aFile[256];
 	FILE *pFile = fopen(TEXTURE_FILENAME_MESH, "r");
 

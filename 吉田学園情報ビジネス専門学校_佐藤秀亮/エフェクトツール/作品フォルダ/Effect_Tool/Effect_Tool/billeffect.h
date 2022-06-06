@@ -14,23 +14,32 @@ public:
 	CBillEffect(int nPriority);
 	virtual ~CBillEffect();
 
-	virtual HRESULT Init(D3DXVECTOR3 Size, D3DXVECTOR3 MinSize, D3DCOLORVALUE color, D3DCOLORVALUE Mincolor, int nTex, int nLife);
+	virtual HRESULT Init(D3DXVECTOR3 Size,
+		D3DXVECTOR3 MinSize,
+		D3DCOLORVALUE color,
+		D3DCOLORVALUE Mincolor,
+		int nTex, int nLife,
+		D3DXVECTOR2 TexNum,
+		D3DXVECTOR2 TexMove,
+		int nAnimCounter,
+		D3DXVECTOR2 nSplit);
+
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Draw();
 
 	void SetTexture(int nTex);		//指定された番号のテクスチャを貼れるように
 
+
 protected:
 	bool m_bUninit;	//抹消フラグ
 	int m_nSynthenic;	//合成
+	D3DXVECTOR3 m_MinSize;		//大きさ変動値
+	D3DXVECTOR3 m_Size;			//サイズ
 
 private:
 
-	D3DXVECTOR3 m_Size;			//サイズ
-	D3DXVECTOR3 m_MinSize;		//大きさ変動値
-
-								//カラー
+	//カラー
 	D3DCOLORVALUE m_Color;
 
 	//カラー減衰

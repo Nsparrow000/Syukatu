@@ -43,7 +43,14 @@ HRESULT CMouseTracking::Init(D3DXVECTOR3 pos,
 
 	m_UninitVectl = UninitVectl;
 
-	float randAngle = float(rand() % Diffusion) - float(rand() % Diffusion);
+	//ç≈í·ï€è·
+	int Lowest = Diffusion;
+	if (Lowest <= 0)
+	{
+		Lowest = 1;
+	}
+
+	float randAngle = float(rand() % Lowest) - float(rand() % Lowest);
 	randAngle /= 100.0f;
 
 	m_fAngle = (float)atan2(m_Vec.x, m_Vec.y);		//äpìx

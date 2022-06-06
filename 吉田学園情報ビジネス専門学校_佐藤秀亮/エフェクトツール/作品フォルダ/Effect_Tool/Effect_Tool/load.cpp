@@ -187,7 +187,7 @@ void CLoad::Load(const char *aFileName)
 	}
 }
 
-void CLoad::Load2D(const char *aFileName)
+void CLoad::LoadButten(const char *aFileName)
 {
 	FILE *pFile = fopen(aFileName, "r");
 	char aFile[256];
@@ -200,6 +200,10 @@ void CLoad::Load2D(const char *aFileName)
 	int nDisplay;
 	int nPattern;
 	bool bButten = false;
+
+	bool bButtenState = false;
+	bool bButtenPatten = false;
+	int nButtenPatten = 0;
 
 	if (pFile != NULL)
 	{
@@ -246,6 +250,54 @@ void CLoad::Load2D(const char *aFileName)
 				}
 			}
 
+			if (bButtenPatten == true)
+			{
+				if (bButtenState == true)
+				{
+					if (strcmp(&aFile[0], "POS") == 0) //座標
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f %f", &pos.x, &pos.y, &pos.z);
+					}
+					if (strcmp(&aFile[0], "SIZE") == 0)	//大きさ
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f", &Size.x, &Size.y);
+					}
+					if (strcmp(&aFile[0], "TEXTURE") == 0)	//テクスチャ
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nTex);
+					}
+					if (strcmp(&aFile[0], "OPERATION") == 0)	//設定内容
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &Operation);
+					}
+					if (strcmp(&aFile[0], "INDENUM") == 0)	//増減する数値
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f", &nIndeNum);
+					}
+					if (strcmp(&aFile[0], "PATTERN") == 0)	//どのパターン時に表示するか
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nPattern);
+					}
+				}
+
+				if (strcmp(&aFile[0], "BUTTENSTATE") == 0) //ボタン
+				{
+					bButtenState = true;
+				}
+				if (strcmp(&aFile[0], "END_BUTTENSTATE") == 0) //ボタン
+				{
+					CButten::SetButtenState(pos, Size.x, Size.y, nTex, (CButten::OPERATION)Operation, nIndeNum, (CButten::DISPLAY_PATTERN)nPattern);
+
+					bButtenState = false;
+				}
+			}
+
 			if (strcmp(&aFile[0], "BUTTENSET") == 0) //ボタン
 			{
 				bButten = true;
@@ -255,6 +307,22 @@ void CLoad::Load2D(const char *aFileName)
 				bButten = false;
 				CButten::Create(pos, Size.x, Size.y, nTex, (CButten::OPERATION)Operation, nIndeNum,(CButten::DISPLAY)nDisplay,(CButten::DISPLAY_PATTERN)nPattern);
 			}
+
+
+			if (strcmp(&aFile[0], "BUTTENPATTENSET") == 0) //ボタン
+			{
+				bButtenPatten = true;
+			}
+			if (strcmp(&aFile[0], "END_BUTTENPATTENSET") == 0) //ボタン
+			{
+				bButtenPatten = false;
+				CButten::SetTotal(nButtenPatten);
+				CButten::SetPatten();
+				CButten::ResetTotal();
+				nButtenPatten++;
+			}
+
+
 			if (strcmp(&aFile[0], "END_SCRIPT") == 0) //終わり
 			{
 				break;

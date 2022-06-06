@@ -16,7 +16,7 @@
 #define MAX_SERECT_COLOR (5)	//最大選択色
 #define MAX_COLOR (255)			//最大色値
 
-#define MAX_CHANGECOL (10)		//最大増減色値
+#define MAX_CHANGECOL (30)		//最大増減色値
 
 #define RAND_COLOR (float(rand()% 255) + 5)	//ランダムカラー
 
@@ -85,6 +85,20 @@ D3DCOLORVALUE CControl::m_TrajectChangeCol = {};
 D3DCOLORVALUE CControl::m_ParticleColor = {};
 D3DCOLORVALUE CControl::m_ParticleAddCol = {};
 int CControl::nParticleSynthetic = 0;
+int CControl::m_nSecondTime = 0;
+
+int CControl::m_nVtx = 4;
+int CControl::m_nType = 0;
+D3DXVECTOR2 CControl::m_TexMove = D3DXVECTOR2(0.0f, 0.0f);
+D3DXVECTOR2 CControl::m_TexNum = D3DXVECTOR2(1.0f, 1.0f);
+int CControl::m_SecndType = 0;
+
+D3DXVECTOR2 CControl::m_TexPattern = D3DXVECTOR2(1.0f, 1.0f);
+int CControl::m_nAnimCont = -1;
+D3DXVECTOR2 CControl::m_nSplit = D3DXVECTOR2(1.0f, 1.0f);
+float CControl::m_fHigth = 30.0f;
+D3DXVECTOR3 CControl::m_ContorolBezier = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+int CControl::m_SecondTex = 1;
 
 
 //*****************************************************************************
@@ -311,359 +325,13 @@ void CControl::SetButten(int nPattern)
 {
 	if (CManager::GetMode() == CManager::MODE_2D)
 	{
-		switch (nPattern)
-		{
-		case(0):	//直線
-			//移動X
-			CButten::Create(D3DXVECTOR3(77.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, 5, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(100.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, -5, CButten::CHANGE, CButten::PATTERN0);
-			//移動Y
-			CButten::Create(D3DXVECTOR3(77.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEY, 5, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(100.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEY, -5, CButten::CHANGE, CButten::PATTERN0);
-			//移動加算X
-			CButten::Create(D3DXVECTOR3(110.0f, 451.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDMOVEX, 0.1f, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(134.0f, 451.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDMOVEX, -0.1f, CButten::CHANGE, CButten::PATTERN0);
-			//移動加算Y
-			CButten::Create(D3DXVECTOR3(110.0f, 471.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDMOVEY, 0.1f, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(134.0f, 471.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDMOVEY, -0.1f, CButten::CHANGE, CButten::PATTERN0);
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 561.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(88.0f, 561.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN0);
-
-			break;
-		case(1):
-			//移動
-			CButten::Create(D3DXVECTOR3(68.0f, 415.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(93.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, -1, CButten::CHANGE, CButten::PATTERN1);
-			//拡散
-			CButten::Create(D3DXVECTOR3(68.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DIFFUSION, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(93.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DIFFUSION, -1, CButten::CHANGE, CButten::PATTERN1);
-			//削除範囲
-			CButten::Create(D3DXVECTOR3(102.0f, 451.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DESTROY, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(125.0f, 451.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DESTROY, -1, CButten::CHANGE, CButten::PATTERN1);
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 561.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(88.0f, 561.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN1);
-
-			break;
-		case(2):
-			//移動X
-			CButten::Create(D3DXVECTOR3(77.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, 5, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(100.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEX, -5, CButten::CHANGE, CButten::PATTERN2);
-			//移動Y
-			CButten::Create(D3DXVECTOR3(77.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEY, 5, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(100.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVEY, -5, CButten::CHANGE, CButten::PATTERN2);
-			//回転
-			CButten::Create(D3DXVECTOR3(52.0f, 453.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ROTATE, 0.01f, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(76.0f, 453.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ROTATE, -0.01f, CButten::CHANGE, CButten::PATTERN2);
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 543.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(88.0f, 543.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN2);
-
-			break;
-		default:
-			break;
-		}
+		//ボタン配置
+		CButten::SetButten(nPattern);
 	}
 	else if (CManager::GetMode() == CManager::MODE_3D)
 	{
-		switch (nPattern)
-		{
-		case(0)://軌跡
-			//テクスチャ
-			CButten::Create(D3DXVECTOR3(105.0f, 218.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, -1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(136.0f, 218.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, 1, CButten::CHANGE, CButten::PATTERN0);
-			//軌跡先端色
-			CButten::Create(D3DXVECTOR3(133.0f, 290.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOPCOL, 5, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(156.0f, 290.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOPCOL, -5, CButten::CHANGE, CButten::PATTERN0);
-			//軌跡先端増減
-			CButten::Create(D3DXVECTOR3(117.0f, 307.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOPADDCOL, 1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(142.0f, 307.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOPADDCOL, -1, CButten::CHANGE, CButten::PATTERN0);
-			//先端モデル
-			CButten::Create(D3DXVECTOR3(133.0f, 324.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTCUR, 1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(156.0f, 324.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTCUR, -1, CButten::CHANGE, CButten::PATTERN0);
-			//手元モデル
-			CButten::Create(D3DXVECTOR3(135.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOP, 1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(156.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOP, -1, CButten::CHANGE, CButten::PATTERN0);
-			//セーブ
-			CButten::Create(D3DXVECTOR3(120.0f, 397.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SAVE, 0, CButten::CHANGE, CButten::PATTERN0);
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 470.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN0);
-			CButten::Create(D3DXVECTOR3(88.0f, 470.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN0);
-			//ロード
-			CButten::Create(D3DXVECTOR3(106.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::LOAD, 0, CButten::CHANGE, CButten::PATTERN0);
-			//プリセットロード
-			CButten::Create(D3DXVECTOR3(153.0f, 435.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PRESETLOAD, 0, CButten::CHANGE, CButten::PATTERN0);
-			break;
-		case(1):
-			//サイズ
-			CButten::Create(D3DXVECTOR3(69.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(93.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, -1, CButten::CHANGE, CButten::PATTERN1);
-			//サイズ増減
-			CButten::Create(D3DXVECTOR3(102.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, 0.1f, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(124.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, -0.1f, CButten::CHANGE, CButten::PATTERN1);
-			//密度
-			CButten::Create(D3DXVECTOR3(54.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(79.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, -1, CButten::CHANGE, CButten::PATTERN1);
-			//テクスチャ
-			CButten::Create(D3DXVECTOR3(104.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, -1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(138.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, 1, CButten::CHANGE, CButten::PATTERN1);
-			//移動X
-			CButten::Create(D3DXVECTOR3(78.0f, 308.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DX, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(104.0f, 308.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DX, -1, CButten::CHANGE, CButten::PATTERN1);
-			//移動Y
-			CButten::Create(D3DXVECTOR3(78.0f, 326.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DY, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(104.0f, 326.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DY, -1, CButten::CHANGE, CButten::PATTERN1);
-			//移動Z
-			CButten::Create(D3DXVECTOR3(78.0f, 345.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DZ, 1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(104.0f, 345.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DZ, -1, CButten::CHANGE, CButten::PATTERN1);
-			//セーブ
-			CButten::Create(D3DXVECTOR3(120.0f, 378.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SAVE, 0, CButten::CHANGE, CButten::PATTERN1);
-
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 452.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN1);
-			CButten::Create(D3DXVECTOR3(88.0f, 452.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN1);
-
-			//ロード
-			CButten::Create(D3DXVECTOR3(106.0f, 398.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::LOAD, 0, CButten::CHANGE, CButten::PATTERN1);
-
-			//プリセットロード
-			CButten::Create(D3DXVECTOR3(151.0f, 415.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PRESETLOAD, 0, CButten::CHANGE, CButten::PATTERN1);
-
-			break;
-		case(2):
-			//サイズ
-			CButten::Create(D3DXVECTOR3(69.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, 1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(93.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, -1, CButten::CHANGE, CButten::PATTERN2);
-			//サイズ増減
-			CButten::Create(D3DXVECTOR3(102.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, 0.1f, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(124.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, -0.1f, CButten::CHANGE, CButten::PATTERN2);
-			//密度
-			CButten::Create(D3DXVECTOR3(54.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, 1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(79.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, -1, CButten::CHANGE, CButten::PATTERN2);
-			//テクスチャ
-			CButten::Create(D3DXVECTOR3(104.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, -1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(138.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, 1, CButten::CHANGE, CButten::PATTERN2);
-			//動く値
-			CButten::Create(D3DXVECTOR3(148.0f, 309.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::RANDMOVE3D, 1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(174.0f, 309.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::RANDMOVE3D, -1, CButten::CHANGE, CButten::PATTERN2);
-			//先端モデル
-			CButten::Create(D3DXVECTOR3(108.0f, 326.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTCUR, 1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(131.0f, 326.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTCUR, -1, CButten::CHANGE, CButten::PATTERN2);
-			//手元モデル
-			CButten::Create(D3DXVECTOR3(108.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOP, 1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(133.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TRAJECTTOP, -1, CButten::CHANGE, CButten::PATTERN2);
-			//セーブ
-			CButten::Create(D3DXVECTOR3(120.0f, 378.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SAVE, 0, CButten::CHANGE, CButten::PATTERN2);
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 452.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN2);
-			CButten::Create(D3DXVECTOR3(88.0f, 452.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN2);
-
-			//ロード
-			CButten::Create(D3DXVECTOR3(106.0f, 398.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::LOAD, 0, CButten::CHANGE, CButten::PATTERN2);
-
-			//プリセットロード
-			CButten::Create(D3DXVECTOR3(151.0f, 415.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PRESETLOAD, 0, CButten::CHANGE, CButten::PATTERN2);
-
-			break;
-		case(3):
-			//サイズ
-			CButten::Create(D3DXVECTOR3(69.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, 10, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(93.0f, 217.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SIZE, -10, CButten::CHANGE, CButten::PATTERN3);
-			//サイズ増減
-			CButten::Create(D3DXVECTOR3(102.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(124.0f, 237.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ADDSIZE, -1, CButten::CHANGE, CButten::PATTERN3);
-
-			//密度
-			CButten::Create(D3DXVECTOR3(54.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(79.0f, 254.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DENSITY, -1, CButten::CHANGE, CButten::PATTERN3);
-
-			//テクスチャ
-			CButten::Create(D3DXVECTOR3(104.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, -1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(138.0f, 274.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::TEXTURE, 1, CButten::CHANGE, CButten::PATTERN3);
-
-			//回転
-			CButten::Create(D3DXVECTOR3(53.0f, 308.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ROTATE, 0.01f, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(76.0f, 308.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ROTATE, -0.01f, CButten::CHANGE, CButten::PATTERN3);
-
-			//移動
-			CButten::Create(D3DXVECTOR3(84.0f, 325.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DX, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(108.0f, 325.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MOVE3DX, -1, CButten::CHANGE, CButten::PATTERN3);
-
-			//粒サイズ
-			CButten::Create(D3DXVECTOR3(84.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLESIZE, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(108.0f, 344.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLESIZE, -1, CButten::CHANGE, CButten::PATTERN3);
-
-			//粒発生時間
-			CButten::Create(D3DXVECTOR3(134.0f, 363.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLETIME, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(158.0f, 363.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLETIME, -1, CButten::CHANGE, CButten::PATTERN3);
-
-			//発生地点
-			CButten::Create(D3DXVECTOR3(101.0f, 379.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DISTANCE, 5, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(122.0f, 379.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::DISTANCE, -5, CButten::CHANGE, CButten::PATTERN3);
-
-			//アクティブ時間
-			CButten::Create(D3DXVECTOR3(133.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ACTIVETIME, 10, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(156.0f, 416.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ACTIVETIME, -10, CButten::CHANGE, CButten::PATTERN3);
-
-			//粒大きさ変動
-			CButten::Create(D3DXVECTOR3(117.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLEADDSIZE, 0.1f, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(143.0f, 434.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLEADDSIZE, -0.1f, CButten::CHANGE, CButten::PATTERN3);
-
-			//大きさ最大
-			CButten::Create(D3DXVECTOR3(117.0f, 454.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MAXSIZE, 10, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(140.0f, 454.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::MAXSIZE, -10, CButten::CHANGE, CButten::PATTERN3);
-
-			//パーティクル色
-			CButten::Create(D3DXVECTOR3(54.0f, 487.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLECOLOR, 5, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(76.0f, 487.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLECOLOR, -5, CButten::CHANGE, CButten::PATTERN3);
-			//パーティクル色増減
-			CButten::Create(D3DXVECTOR3(85.0f, 507.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLEADDCOLOR, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(109.0f, 507.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLEADDCOLOR, -1, CButten::CHANGE, CButten::PATTERN3);
-			//パーティクル合成
-			CButten::Create(D3DXVECTOR3(70.0f, 525.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLESYNSETIC, -1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(93.0f, 525.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PARTICLESYNSETIC, 1, CButten::CHANGE, CButten::PATTERN3);
-
-			//アクティブ中の大きさ変更
-			CButten::Create(D3DXVECTOR3(165.0f, 542.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ACTIVEADDSIZE, 1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(190.0f, 542.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::ACTIVEADDSIZE, -1, CButten::CHANGE, CButten::PATTERN3);
-
-
-			//セーブ
-			CButten::Create(D3DXVECTOR3(120.0f, 578.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SAVE, 0, CButten::CHANGE, CButten::PATTERN3);
-
-			//ロード
-			CButten::Create(D3DXVECTOR3(106.0f, 595.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::LOAD, 0, CButten::CHANGE, CButten::PATTERN3);
-
-			//合成
-			CButten::Create(D3DXVECTOR3(56.0f, 650.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, -1, CButten::CHANGE, CButten::PATTERN3);
-			CButten::Create(D3DXVECTOR3(88.0f, 650.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::SYNTHETIC, 1, CButten::CHANGE, CButten::PATTERN3);
-
-			//ロード
-			CButten::Create(D3DXVECTOR3(150.0f, 613.0f, 0.0f), BUTTEN_SIZE, BUTTEN_SIZE, -1,
-				CButten::PRESETLOAD, 0, CButten::CHANGE, CButten::PATTERN3);
-
-
-			break;
-
-		default:
-			break;
-		}
+			//ボタン配置
+			CButten::SetButten(nPattern);
 	}
 }
 
@@ -732,6 +400,8 @@ void CControl::SaveEffect(CManager::MODE mode, int nPattern)
 			}
 
 			fprintf(pFile, "	MOUSEPOS = %d						//マウス追従ON 1だと有効\n", m_bMouseCursor);
+			fprintf(pFile, "	TEXTURE = %d						//テクスチャ\n", CControl::GetTex());
+			fprintf(pFile, "	SYNTHETIC = %d						//合成\n", CControl::GetSynthetic());
 
 
 			fprintf(pFile, "END_EFFECTSTATE2D\n\n");
@@ -740,8 +410,6 @@ void CControl::SaveEffect(CManager::MODE mode, int nPattern)
 		{
 			fprintf(pFile, "EFFECTSTATE3D\n");
 			fprintf(pFile, "	PATTERN = %d				//動きのパターン\n", nPattern);
-
-			fprintf(pFile, "	LIFE = %d						//寿命\n", m_nLife);
 
 			switch (nPattern)
 			{
@@ -758,6 +426,12 @@ void CControl::SaveEffect(CManager::MODE mode, int nPattern)
 				fprintf(pFile, "	DENSITY = %d						//密度\n", CControl::GetDensity());
 
 				fprintf(pFile, "	MOVE3D = %.1f %.1f %.1f					//移動\n", CControl::Getmove3d().x, CControl::Getmove3d().y, CControl::Getmove3d().z);
+
+				fprintf(pFile, "	DISTANCE = %.1f						//発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	TYPE = %d					//出現位置のパターン\n", CControl::GetType());
+				fprintf(pFile, "	SECONDTYPE = %d					//ランダム移動のパターン\n", CControl::GetSecondType());
+				fprintf(pFile, "	PARTICLETIME = %d						//粒発生間隔\n", CControl::GetParticleTime());
+
 				break;
 			case(2):
 				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
@@ -792,6 +466,65 @@ void CControl::SaveEffect(CManager::MODE mode, int nPattern)
 				fprintf(pFile, "	FIELDTIME = 10			//フィールド生成間隔\n");
 				fprintf(pFile, "	FIELDCREATE = 0			//フィールド生成するか\n");
 				fprintf(pFile, "	CREATEPRESET = 0					//生成プリセット\n");
+				break;
+			case(4):
+
+				fprintf(pFile, "	MOVE3D = %.1f %.1f %.1f					//移動\n", CControl::Getmove3d().x, CControl::Getmove3d().y, CControl::Getmove3d().z);
+				fprintf(pFile, "	ACTIVE = %d						//稼働時間\n", CControl::GetActiveTime());
+				fprintf(pFile, "	MAXSIZE = %.1f						//フィールド最大サイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	DENSITY = %d						//粒密度\n", CControl::GetDensity());
+
+				break;
+			case(5):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+				fprintf(pFile, "	DENSITY = %d						//粒密度\n", CControl::GetDensity());
+				fprintf(pFile, "	ROTATE = %.2f						//回転\n", CControl::GetRotate());
+				fprintf(pFile, "	DISTANCE = %.1f						//粒の発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	PARTICLETIME = %d						//粒発生間隔\n", CControl::GetParticleTime());
+				fprintf(pFile, "	SECONDTIME = %d						//近づくまでの時間\n", CControl::GetSecondTime());
+				fprintf(pFile, "	MAXSIZE = %.1f						//アクティブサイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	MOVE = %.1f						//距離加算\n", CControl::Getmove3d().x);
+
+				break;
+			case(6):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+
+				fprintf(pFile, "	ROTATE = %.2f						//回転\n", CControl::GetRotate());
+				fprintf(pFile, "	VTX = %d						//頂点数\n", CControl::GetVtx());
+				fprintf(pFile, "	TYPE = %d					//球(0)or半球(1)\n", CControl::GetType());
+
+
+				break;
+			case(7):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+
+				fprintf(pFile, "	DISTANCE = %.1f						//上発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	HIGTH = %.1f						//上距離\n", CControl::GetHigth());
+				fprintf(pFile, "	PARTICLESIZE = %.1f						//下部分の幅\n", CControl::GetParticleSize());
+				break;
+			case(8):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+				fprintf(pFile, "	DENSITY = %d						//密度\n", CControl::GetDensity());
+
+				fprintf(pFile, "	CONTROLBEZIER = %.1f %.1f %.1f						//ベジェ制御点\n", CControl::GetContorolBezierX(), CControl::GetContorolBezierY(), CControl::GetContorolBezierZ());
+				fprintf(pFile, "	MOVE = %.1f						//移動（制御点の数）\n", CControl::Getmove3d().x);
+
+				fprintf(pFile, "	SECONDCOLOR = %d %d %d %d			//軌跡の色１\n", (int)CControl::GetParticleColor(1), (int)CControl::GetParticleColor(2), (int)CControl::GetParticleColor(3), (int)CControl::GetParticleColor(4));
+				fprintf(pFile, "	SECONDADDCOLOR = %d %d %d %d			//軌跡の色１増減\n", (int)CControl::GetParticleAddCol(1), (int)CControl::GetParticleAddCol(2), (int)CControl::GetParticleAddCol(3), (int)CControl::GetParticleAddCol(4));
+
+				fprintf(pFile, "	THERDCOLOR = %d %d %d %d				//軌跡の色２\n", (int)CControl::GetTrajectColor(1), (int)CControl::GetTrajectColor(2), (int)CControl::GetTrajectColor(3), (int)CControl::GetTrajectColor(4));
+				fprintf(pFile, "	THERDADDCOLOR = %d %d %d %d				//軌跡の色２増減\n", (int)CControl::GetTrajectCol(1), (int)CControl::GetTrajectCol(2), (int)CControl::GetTrajectCol(3), (int)CControl::GetTrajectCol(4));
+
+				fprintf(pFile, "	MAXSIZE = %.1f						//軌跡サイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	SECONDTEX = %d						//軌跡テクスチャ\n", CControl::GetSecondTex());
+				fprintf(pFile, "	PARTICLETIME = %d						//軌跡寿命\n", CControl::GetParticleTime());
+
+				fprintf(pFile, "	DISTANCE = %.1f						//ターゲットからのランダム距離\n", CControl::GetDistance());
+				fprintf(pFile, "	SECONDSYNTHETIC = %d			//軌跡合成\n", (int)CControl::GetParticleSynthetic());
 
 				break;
 			default:
@@ -805,6 +538,11 @@ void CControl::SaveEffect(CManager::MODE mode, int nPattern)
 			fprintf(pFile, "	LIFE = %d						//ライフ\n", CControl::GetLife());
 			fprintf(pFile, "	TEXTURE = %d						//テクスチャ\n", CControl::GetTex());
 			fprintf(pFile, "	SYNTHETIC = %d						//合成\n", CControl::GetSynthetic());
+			fprintf(pFile, "	TEXMOVE = %.3f %.3f					//テクスチャ移動\n", CControl::GetTexMoveU(), CControl::GetTexMoveV());
+			fprintf(pFile, "	TEXNUM = %.1f %.1f					//テクスチャ枚数\n", CControl::GetTexNum().x, CControl::GetTexNum().y);
+
+			fprintf(pFile, "	TEXANIMCOUNT = %d					//テクスチャアニメーションカウント\n", CControl::GetAnimCont());
+			fprintf(pFile, "	TEXSPLIT = %.0f %.0f					//テクスチャ分割数\n", CControl::GetSplitU(), CControl::GetSplitV());
 
 			fprintf(pFile, "END_EFFECTSTATE3D\n\n");
 		}
@@ -1228,24 +966,12 @@ void CControl::Addmove3d(float Move, int nNum)
 	{
 	case(0):
 		m_move3d.x += Move;
-		if (m_move3d.x <= 0)
-		{
-			m_move3d.x = 1;
-		}
 		break;
 	case(1):
 		m_move3d.y += Move;
-		if (m_move3d.y <= 0)
-		{
-			m_move3d.y = 1;
-		}
 		break;
 	case(2):
 		m_move3d.z += Move;
-		if (m_move3d.z<= 0)
-		{
-			m_move3d.z = 1;
-		}
 
 		break;
 	default:
@@ -1317,9 +1043,9 @@ void CControl::AddParticleColor(int nColor, int nSerect)
 		{
 			m_ParticleColor.r = MAX_COLOR;
 		}
-		else if (m_ParticleColor.r < 0)
+		else if (m_ParticleColor.r < -MAX_COLOR)
 		{
-			m_ParticleColor.r = 0;
+			m_ParticleColor.r = -MAX_COLOR;
 		}
 		break;
 	case(2):
@@ -1328,9 +1054,9 @@ void CControl::AddParticleColor(int nColor, int nSerect)
 		{
 			m_ParticleColor.g = MAX_COLOR;
 		}
-		else if (m_ParticleColor.g < 0)
+		else if (m_ParticleColor.g < -MAX_COLOR)
 		{
-			m_ParticleColor.g = 0;
+			m_ParticleColor.g = -MAX_COLOR;
 		}
 		break;
 	case(3):
@@ -1339,9 +1065,9 @@ void CControl::AddParticleColor(int nColor, int nSerect)
 		{
 			m_ParticleColor.b = MAX_COLOR;
 		}
-		else if (m_ParticleColor.b < 0)
+		else if (m_ParticleColor.b < -MAX_COLOR)
 		{
-			m_ParticleColor.b = 0;
+			m_ParticleColor.b = -MAX_COLOR;
 		}
 		break;
 	case(4):
@@ -1350,9 +1076,9 @@ void CControl::AddParticleColor(int nColor, int nSerect)
 		{
 			m_ParticleColor.a = MAX_COLOR;
 		}
-		else if (m_ParticleColor.a < 0)
+		else if (m_ParticleColor.a < -MAX_COLOR)
 		{
-			m_ParticleColor.a = 0;
+			m_ParticleColor.a = -MAX_COLOR;
 		}
 		break;
 	default:
@@ -1374,9 +1100,9 @@ void CControl::AddParticleAddCol(int nColor, int nSerect)
 		{
 			m_ParticleAddCol.r = MAX_COLOR;
 		}
-		else if (m_ParticleAddCol.r < 0)
+		else if (m_ParticleAddCol.r < -MAX_COLOR)
 		{
-			m_ParticleAddCol.r = 0;
+			m_ParticleAddCol.r = -MAX_COLOR;
 		}
 		break;
 	case(2):
@@ -1385,9 +1111,9 @@ void CControl::AddParticleAddCol(int nColor, int nSerect)
 		{
 			m_ParticleAddCol.g = MAX_COLOR;
 		}
-		else if (m_ParticleAddCol.g < 0)
+		else if (m_ParticleAddCol.g < -MAX_COLOR)
 		{
-			m_ParticleAddCol.g = 0;
+			m_ParticleAddCol.g = -MAX_COLOR;
 		}
 		break;
 	case(3):
@@ -1396,9 +1122,9 @@ void CControl::AddParticleAddCol(int nColor, int nSerect)
 		{
 			m_ParticleAddCol.b = MAX_COLOR;
 		}
-		else if (m_ParticleAddCol.b < 0)
+		else if (m_ParticleAddCol.b < -MAX_COLOR)
 		{
-			m_ParticleAddCol.b = 0;
+			m_ParticleAddCol.b = -MAX_COLOR;
 		}
 		break;
 	case(4):
@@ -1407,9 +1133,9 @@ void CControl::AddParticleAddCol(int nColor, int nSerect)
 		{
 			m_ParticleAddCol.a = MAX_COLOR;
 		}
-		else if (m_ParticleAddCol.a < 0)
+		else if (m_ParticleAddCol.a < -MAX_COLOR)
 		{
-			m_ParticleAddCol.a = 0;
+			m_ParticleAddCol.a = -MAX_COLOR;
 		}
 		break;
 	default:

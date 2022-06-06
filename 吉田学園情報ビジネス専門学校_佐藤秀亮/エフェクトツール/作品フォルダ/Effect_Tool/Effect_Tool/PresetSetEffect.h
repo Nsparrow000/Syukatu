@@ -5,6 +5,7 @@
 #ifndef _PRESETEFFECT_H_
 #define _PRESETEFFECT_H_
 #include "main.h"
+#include "scene.h"
 
 //*****************************************************************************
 // マクロ
@@ -12,8 +13,9 @@
 #define MAX_EFFECTPATTERN_2D (8)
 #define MAX_EFFECTPATTERN_3D (8)
 
+#define MAX_ORDER_3D (8)
 
-class CPresetEffect
+class CPresetEffect : CScene
 {
 public:
 	//2D用のエフェクトステータス集
@@ -78,6 +80,15 @@ public:
 		int m_FieldTime;	//フィールド生成間隔
 		bool m_fieldCreate;	//フィールド生成するか
 		int mCreatePreset;	//どのプリセットを生成するか
+		int m_nSecondTime;	//2番目の時間計算
+		int m_nVtx;	//頂点数
+		int m_nType;	//タイプ
+		D3DXVECTOR2 m_TexMove;	//テクスチャ移動
+		D3DXVECTOR2 m_TexNum;	//テクスチャ枚数
+		int m_SecondType;	
+		D3DXVECTOR2 m_TexSplit;	//分割数
+		int AnimCnt;	//アニメーションカウント
+		float m_fHigth;	//高さ
 	} EFFECT_STATE3D;
 
 
@@ -107,7 +118,8 @@ public:
 		int Texture);
 
 	//読み込んだエフェクトの情報を格納するやつ3D
-	static void SetEffectState3D(int nPattern,
+	static void SetEffectState3D(
+		int nPattern,
 		float m_fRotate,
 		float m_move,
 		float m_Addmove,
@@ -140,17 +152,59 @@ public:
 		float m_fActiveAddSize,
 		int m_FieldTime,
 		bool m_fieldCreate,
-		int mCreatePreset);
+		int mCreatePreset,
+		int m_nSecondTime,
+		int m_nVtx,
+		int m_nType,
+		D3DXVECTOR2 m_TexMove,
+		D3DXVECTOR2 m_TexNum,
+		int m_nSecondType,
+		D3DXVECTOR2 m_TexSplit,
+		int AnimCnt,
+		float fHigth);
+
+	typedef struct
+	{
+		int nDeley;
+		int nPresetNum;
+		int m_nOrder[MAX_ORDER_3D];
+		D3DXVECTOR3 pos[MAX_ORDER_3D];
+		D3DXVECTOR3 Endpos[MAX_ORDER_3D];
+		bool bOne[MAX_ORDER_3D];
+	} ORDER_PRESET;
 
 	static void SetEffect2D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
 	static void SetEffect3D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
 
+	void SetOrderPreset(int nDeley, int nPresetNum);
+	static void CallOrder3D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
+	void DeleySet(int nPattern);
+
+	void CPresetEffect::SetOrder(int nOrder, int nPattern);
+
+	static CPresetEffect *CreateOrderMenu(int nDeley, int nPresetNum, int nOrder[MAX_ORDER_3D]);
+
 	static void ResetPattern() { m_nEffectPattern = 0; }
+	static void ResetOrder() { m_nMaxOrderCount = 0; }
+
+	HRESULT Init(D3DXVECTOR3 pos);
+	void Uninit();
+	void Update();
+	void Draw();
+
+	void ResetDeley(int n) { nCntDeley[n]= 0; }
 private:
 	static EFFECT_STATE2D m_EffectState2D[MAX_EFFECTPATTERN_2D];
 	static EFFECT_STATE3D m_EffectState3D[MAX_EFFECTPATTERN_3D];
+	static ORDER_PRESET m_Order3D[MAX_ORDER_3D][MAX_ORDER_3D];
 
 	static int m_nEffectPattern;	//複数のやつ読み込めるようにするやつ
 
+	static int m_nMaxOrderCount;	//呼び出す最大数カウント
+	static int m_PrticleCreateTime;	//パーティクル生成間隔計算
+
+	D3DXVECTOR3 m_pos;
+	D3DXVECTOR3 m_EndPos;
+	int nCntDeley[MAX_ORDER_3D];
 };
 #endif // !_PRESETEFFECT_H_

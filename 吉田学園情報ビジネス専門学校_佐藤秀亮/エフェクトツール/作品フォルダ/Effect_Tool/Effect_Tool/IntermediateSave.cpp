@@ -63,7 +63,6 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 				fprintf(pFile, "	ROTATE = %.2f					//回転\n", CControl::GetRotate());
 				break;
 			default:
-				assert(false);
 				break;
 			}
 			fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
@@ -95,13 +94,17 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 				fprintf(pFile, "	TRAJECTCUR = %d				//発生モデル２\n", CControl::GetTrajectModelNum());
 				break;
 			case(1):
-			fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
-			fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
-			fprintf(pFile, "	DENSITY = %d						//密度\n", CControl::GetDensity());
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+				fprintf(pFile, "	DENSITY = %d						//密度\n", CControl::GetDensity());
 
-			fprintf(pFile, "	MOVE3D = %.1f %.1f %.1f					//移動\n", CControl::Getmove3d().x, CControl::Getmove3d().y, CControl::Getmove3d().z);
-				break;
+				fprintf(pFile, "	MOVE3D = %.1f %.1f %.1f					//移動\n", CControl::Getmove3d().x, CControl::Getmove3d().y, CControl::Getmove3d().z);
 
+				fprintf(pFile, "	DISTANCE = %.1f						//発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	TYPE = %d					//出現位置のパターン\n", CControl::GetType());
+				fprintf(pFile, "	SECONDTYPE = %d					//ランダム移動のパターン\n", CControl::GetSecondType());
+				fprintf(pFile, "	PARTICLETIME = %d						//粒発生間隔\n", CControl::GetParticleTime());
+			break;
 			case(2):
 				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
 				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
@@ -132,15 +135,83 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 				fprintf(pFile, "	ACTIVEADDSIZE = %.1f					//稼働中の稼働時間\n", CControl::GetAvctiveAddSize());
 
 				break;
+			case(4):
+				fprintf(pFile, "	MOVE3D = %.1f %.1f %.1f					//移動\n", CControl::Getmove3d().x, CControl::Getmove3d().y, CControl::Getmove3d().z);
+				fprintf(pFile, "	ACTIVE = %d						//稼働時間\n", CControl::GetActiveTime());
+				fprintf(pFile, "	MAXSIZE = %.1f						//フィールド最大サイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	DENSITY = %d						//粒密度\n", CControl::GetDensity());
+
+				break;
+			case(5):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+				fprintf(pFile, "	DENSITY = %d						//粒密度\n", CControl::GetDensity());
+
+				fprintf(pFile, "	ROTATE = %.2f						//回転\n", CControl::GetRotate());
+				fprintf(pFile, "	DISTANCE = %.1f						//粒の発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	PARTICLETIME = %d						//粒発生間隔\n", CControl::GetParticleTime());
+				fprintf(pFile, "	SECONDTIME = %d						//近づくまでの時間\n", CControl::GetSecondTime());
+				fprintf(pFile, "	MAXSIZE = %.1f						//アクティブサイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	MOVE = %.1f						//距離加算\n", CControl::Getmove3d().x);
+				break;
+			case(6):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+
+				fprintf(pFile, "	ROTATE = %.2f						//回転\n", CControl::GetRotate());
+				fprintf(pFile, "	VTX = %d						//頂点数\n", CControl::GetVtx());
+				fprintf(pFile, "	TYPE = %d					//球(0)or半球(1)\n", CControl::GetType());
+
+				break;
+			case(7):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+
+				fprintf(pFile, "	DISTANCE = %.1f						//上発生距離\n", CControl::GetDistance());
+				fprintf(pFile, "	HIGTH = %.1f						//上距離\n", CControl::GetHigth());
+				fprintf(pFile, "	PARTICLESIZE = %.1f						//下部分の幅\n", CControl::GetParticleSize());
+
+				break;
+			case(8):
+				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
+				fprintf(pFile, "	ADDSIZE = %.1f					//大きさ変動\n", CControl::GetChangeSize());
+				fprintf(pFile, "	DENSITY = %d						//密度\n", CControl::GetDensity());
+
+				fprintf(pFile, "	CONTROLBEZIER = %.1f %.1f %.1f						//ベジェ制御点\n", CControl::GetContorolBezierX(), CControl::GetContorolBezierY(), CControl::GetContorolBezierZ());
+				fprintf(pFile, "	MOVE = %.1f						//移動（制御点の数）\n", CControl::Getmove3d().x);
+
+				fprintf(pFile, "	SECONDCOLOR = %d %d %d %d			//軌跡の色１\n", (int)CControl::GetParticleColor(1), (int)CControl::GetParticleColor(2), (int)CControl::GetParticleColor(3), (int)CControl::GetParticleColor(4));
+				fprintf(pFile, "	SECONDADDCOLOR = %d %d %d %d			//軌跡の色１増減\n", (int)CControl::GetParticleAddCol(1), (int)CControl::GetParticleAddCol(2), (int)CControl::GetParticleAddCol(3), (int)CControl::GetParticleAddCol(4));
+
+				fprintf(pFile, "	THERDCOLOR = %d %d %d %d				//軌跡の色２\n", (int)CControl::GetTrajectColor(1), (int)CControl::GetTrajectColor(2), (int)CControl::GetTrajectColor(3), (int)CControl::GetTrajectColor(4));
+				fprintf(pFile, "	THERDADDCOLOR = %d %d %d %d				//軌跡の色２増減\n", (int)CControl::GetTrajectCol(1), (int)CControl::GetTrajectCol(2), (int)CControl::GetTrajectCol(3), (int)CControl::GetTrajectCol(4));
+
+				fprintf(pFile, "	MAXSIZE = %.1f						//軌跡サイズ\n", CControl::GetMaxSize());
+				fprintf(pFile, "	SECONDTEX = %d						//軌跡テクスチャ\n", CControl::GetSecondTex());
+				fprintf(pFile, "	PARTICLETIME = %d						//軌跡寿命\n", CControl::GetParticleTime());
+
+				fprintf(pFile, "	DISTANCE = %.1f						//ターゲットからのランダム距離\n", CControl::GetDistance());
+				fprintf(pFile, "	SECONDSYNTHETIC = %d			//軌跡合成\n", (int)CControl::GetParticleSynthetic());
+
+				break;
 			default:
 				break;
 			}
 
 			fprintf(pFile, "	COLOR = %d %d %d %d			//カラー\n", (int)CControl::GetControlCoror(1), (int)CControl::GetControlCoror(2), (int)CControl::GetControlCoror(3), (int)CControl::GetControlCoror(4));
 			fprintf(pFile, "	CHANGECOLOR = %d %d %d %d			//カラー変動値\n", (int)CControl::GetChangeCol(1), (int)CControl::GetChangeCol(2), (int)CControl::GetChangeCol(3), (int)CControl::GetChangeCol(4));
-			fprintf(pFile, "	LIFE = %d						//ライフ\n", CControl::GetLife());
 			fprintf(pFile, "	TEXTURE = %d						//テクスチャ\n", CControl::GetTex());
 			fprintf(pFile, "	SYNTHETIC = %d						//合成\n", CControl::GetSynthetic());
+
+			fprintf(pFile, "	TEXMOVE = %.3f %.3f					//テクスチャ移動\n", CControl::GetTexMoveU(), CControl::GetTexMoveV());
+			fprintf(pFile, "	TEXNUM = %.1f %.1f					//テクスチャ枚数\n", CControl::GetTexNum().x, CControl::GetTexNum().y);
+
+			fprintf(pFile, "	TEXMOVE = %.3f %.3f					//テクスチャ移動\n", CControl::GetTexMoveU(), CControl::GetTexMoveV());
+
+
+			fprintf(pFile, "	TEXANIMCOUNT = %d					//テクスチャアニメーションカウント\n", CControl::GetAnimCont());
+			fprintf(pFile, "	TEXSPLIT = %.0f %.0f					//テクスチャ分割数\n", CControl::GetSplitU(), CControl::GetSplitV());
+
 
 			fprintf(pFile, "END_EFFECTSTATE3D\n");
 
@@ -181,8 +252,6 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 	int nSynthetic = 0;
 	float fRotate = 0.0f;
 
-	D3DCOLORVALUE TrajectTopcol;
-	D3DCOLORVALUE TrajectTopChangeColor;
 	int TrajectTop = 0;
 	int TrajectCur = 0;
 	int RandMove = 1;
@@ -195,8 +264,23 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 	float fMaxSize = 100.0f;
 	D3DCOLORVALUE Particlecol;
 	D3DCOLORVALUE ParticleAddColor;
-	int nParticleSynthetic = 0;
 
+	D3DCOLORVALUE Therdcol;
+	D3DCOLORVALUE TherdAddColor;
+
+	int nParticleSynthetic = 0;
+	int nSecondTime = 0;
+	int nVtx = 0;
+	int nType = 0;
+	D3DXVECTOR2 TexMove = D3DXVECTOR2(0.0f,0.0f);
+	D3DXVECTOR2 TexNum = D3DXVECTOR2(1.0f, 1.0f);
+	int nSecondType = 0;
+	D3DXVECTOR2 TexSplit = D3DXVECTOR2(1.0f, 1.0f);
+	int AnimCont = -1;
+	float fHigth = 30.0f;
+
+	D3DXVECTOR3 ControlBezier = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	int SecondTex = 1;
 #endif
 	if (pFile != NULL)
 	{
@@ -356,16 +440,6 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%d", &Density);
 					}
-					if (strcmp(&aFile[0], "TRAJECTTOPCOLOR") == 0)	//軌跡先端カラー
-					{
-						fscanf(pFile, "%s", &aFile[0]);
-						fscanf(pFile, "%f %f %f %f", &TrajectTopcol.r, &TrajectTopcol.g, &TrajectTopcol.b, &TrajectTopcol.a);
-					}
-					if (strcmp(&aFile[0], "TRAJECTTOPCHANGECOLOR") == 0)	//軌跡先端カラー
-					{
-						fscanf(pFile, "%s", &aFile[0]);
-						fscanf(pFile, "%f %f %f %f", &TrajectTopChangeColor.r, &TrajectTopChangeColor.g, &TrajectTopChangeColor.b, &TrajectTopChangeColor.a);
-					}
 					if (strcmp(&aFile[0], "TRAJECTTOP") == 0)	//発生モデル１
 					{
 						fscanf(pFile, "%s", &aFile[0]);
@@ -431,21 +505,87 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%f", &fRotate);
 					}
-					if (strcmp(&aFile[0], "PARTICLECOLOR") == 0)	//パーティクルカラー
+					if (strcmp(&aFile[0], "SECONDCOLOR") == 0)	//パーティクルカラー
 					{
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%f %f %f %f", &Particlecol.r, &Particlecol.g, &Particlecol.b, &Particlecol.a);
 					}
-					if (strcmp(&aFile[0], "PARTICLEADDCOLOR") == 0)	//パーティクルカラー
+					if (strcmp(&aFile[0], "SECONDADDCOLOR") == 0)	//パーティクルカラー
 					{
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%f %f %f %f", &ParticleAddColor.r, &ParticleAddColor.g, &ParticleAddColor.b, &ParticleAddColor.a);
 					}
-					if (strcmp(&aFile[0], "PARTICLESYNTHETIC") == 0)	//パーティクル合成
+					if (strcmp(&aFile[0], "SECONDSYNTHETIC") == 0)	//パーティクル合成
 					{
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%d", &nParticleSynthetic);
 					}
+					if (strcmp(&aFile[0], "SECONDTIME") == 0)	//2番目の時間
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nSecondTime);
+					}
+					if (strcmp(&aFile[0], "VTX") == 0)	//頂点数
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nVtx);
+					}
+					if (strcmp(&aFile[0], "TYPE") == 0)	//頂点数
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nType);
+					}
+					if (strcmp(&aFile[0], "TEXMOVE") == 0)	//テクスチャ移動量
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f", &TexMove.x, &TexMove.y);
+					}
+					if (strcmp(&aFile[0], "TEXNUM") == 0)	//テクスチャ枚数
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f", &TexNum.x , &TexNum.y);
+					}
+					if (strcmp(&aFile[0], "SECONDTYPE") == 0)	//頂点数
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &nSecondType);
+					}
+					if (strcmp(&aFile[0], "TEXSPLIT") == 0)	//テクスチャ移動量
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f", &TexSplit.x, &TexSplit.y);
+					}
+					if (strcmp(&aFile[0], "TEXANIMCOUNT") == 0)	//テクスチャカウント
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &AnimCont);
+					}
+					if (strcmp(&aFile[0], "HIGTH") == 0)	//高さ
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f", &fHigth);
+					}
+					if (strcmp(&aFile[0], "THERDCOLOR") == 0)	//パーティクルカラー
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f %f %f", &Therdcol.r, &Therdcol.g, &Therdcol.b, &Therdcol.a);
+					}
+					if (strcmp(&aFile[0], "THERDADDCOLOR") == 0)	//パーティクルカラー
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f %f %f", &TherdAddColor.r, &TherdAddColor.g, &TherdAddColor.b, &TherdAddColor.a);
+					}
+					if (strcmp(&aFile[0], "SECONDTEX") == 0)	//パーティクルカラー
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &SecondTex);
+					}
+					if (strcmp(&aFile[0], "CONTROLBEZIER") == 0)	//パーティクルカラー
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f %f %f", &ControlBezier.x, &ControlBezier.y, &ControlBezier.z);
+					}
+
 				}
 
 				//エフェクト情報セット
@@ -460,8 +600,8 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 					CControl::SetPattern(nPattern);
 					CControl::SetColor(col);
 					CControl::SetChangeColor(ChangeColor);
-					CControl::SetTrajectColor(TrajectTopcol);
-					CControl::SetTrajectChangeColor(TrajectTopChangeColor);
+					CControl::SetTrajectColor(Therdcol);
+					CControl::SetTrajectChangeColor(TherdAddColor);
 					CControl::SetLife(nLife);
 					CControl::SetTrajectTop(TrajectTop);
 					CControl::SetTrajectCur(TrajectCur);
@@ -481,6 +621,17 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 					CControl::SetParticleAddCol(ParticleAddColor);
 					CControl::SetParticleSynthetic(nParticleSynthetic);
 					CControl::SetActive(nActive);
+					CControl::SetSecondTime(nSecondTime);
+					CControl::SetVtx(nVtx);
+					CControl::SetType(nType);
+					CControl::SetTexMoveUV(TexMove);
+					CControl::SetTexNum(TexNum);
+					CControl::SetSecondType(nSecondType);
+					CControl::SetnAnimCont(AnimCont);
+					CControl::SetnSplit(TexSplit);
+					CControl::SetHigth(fHigth);
+					CControl::SetSecondTex(SecondTex);
+					CControl::SetControlBezier(ControlBezier);
 
 				}
 				if (strcmp(&aFile[0], "EFFECTSTATE3D") == 0)

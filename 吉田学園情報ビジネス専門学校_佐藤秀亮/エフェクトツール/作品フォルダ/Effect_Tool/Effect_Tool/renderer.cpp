@@ -339,13 +339,18 @@ void CRenderer::DrawText()
 				nNum += sprintf(&str[nNum], "移動値 X[+][-]：%.1f\n", CControl::Getmove3d().x);
 				nNum += sprintf(&str[nNum], "移動値 Y[+][-]：%.1f\n", CControl::Getmove3d().y);
 				nNum += sprintf(&str[nNum], "移動値 Z[+][-]：%.1f\n", CControl::Getmove3d().z);
+
+				nNum += sprintf(&str[nNum], "出現位置の距離 [+][-]：%.1f\n", CControl::GetDistance());
+				nNum += sprintf(&str[nNum], "出現位置パターン [+][-]：%d\n", CControl::GetSecondType());
+				nNum += sprintf(&str[nNum], "ランダム移動パターン [+][-]：%d\n", CControl::GetType());
+				nNum += sprintf(&str[nNum], "粒発生間隔 [+][-]：%d\n", CControl::GetParticleTime());
+
 				break;
 			case(2)://纏わせ
 				nNum += sprintf(&str[nNum], "動く値の最大 最小[+][-] ：(%d)\n", CControl::GetRandMove1());
 				nNum += sprintf(&str[nNum], "発生モデル1 [+][-] ：(%d / 14)\n", CControl::GetModelNum());
 				nNum += sprintf(&str[nNum], "発生モデル2 [+][-] ：(%d / 14)\n", CControl::GetTrajectModelNum());
 				break;
-			default:
 			case(3):
 				nNum += sprintf(&str[nNum], "回転 [+][-]：%.2f\n", CControl::GetRotate());
 
@@ -364,7 +369,53 @@ void CRenderer::DrawText()
 				nNum += sprintf(&str[nNum], "稼働中の大きさ変更 [+][-]：(%.1f)\n", CControl::GetAvctiveAddSize());
 
 				break;
-				assert(false);
+			case(4):
+				nNum += sprintf(&str[nNum], "移動値 X[+][-]：%.1f\n", CControl::Getmove3d().x);
+				nNum += sprintf(&str[nNum], "移動値 Y[+][-]：%.1f\n", CControl::Getmove3d().y);
+				nNum += sprintf(&str[nNum], "移動値 Z[+][-]：%.1f\n", CControl::Getmove3d().z);
+
+				nNum += sprintf(&str[nNum], "アクティブ時間 [+][-]：%d\n", CControl::GetActiveTime());
+				nNum += sprintf(&str[nNum], "最大の大きさ [+][-]：%.1f\n", CControl::GetMaxSize());
+
+				break;
+			case(5):
+				nNum += sprintf(&str[nNum], "回転 [+][-]：%.2f\n", CControl::GetRotate());
+				nNum += sprintf(&str[nNum], "粒発生地点 [+][-]：%.1f\n", CControl::GetDistance());
+				nNum += sprintf(&str[nNum], "粒寿命 [+][-]：%d\n", CControl::GetParticleTime());
+				nNum += sprintf(&str[nNum], "近づくまでの時間 [+][-]：%d\n", CControl::GetSecondTime());
+				nNum += sprintf(&str[nNum], "アクティブになるまでの大きさ [+][-]：%.1f\n", CControl::GetMaxSize());
+				nNum += sprintf(&str[nNum], "移動値[+][-]：%.1f\n", CControl::Getmove3d().x);
+
+				break;
+			case(6):
+				nNum += sprintf(&str[nNum], "回転 [+][-]：%.2f\n", CControl::GetRotate());
+				nNum += sprintf(&str[nNum], "頂点数 [+][-]：%d\n", CControl::GetVtx());
+				nNum += sprintf(&str[nNum], "生成タイプ [+][-]：%d\n", CControl::GetType());
+				break;
+			case(7):
+				nNum += sprintf(&str[nNum], "距離 [+][-]：%.1f\n", CControl::GetDistance());
+				nNum += sprintf(&str[nNum], "高さ [+][-]：%.1f\n", CControl::GetHigth());
+				nNum += sprintf(&str[nNum], "下部分幅 [+][-]：%.1f\n", CControl::GetParticleSize());
+				break;
+			case(8):
+				nNum += sprintf(&str[nNum], "制御点 X[+][-]：%.1f\n", CControl::GetContorolBezierX());
+				nNum += sprintf(&str[nNum], "制御点 Y[+][-]：%.1f\n", CControl::GetContorolBezierY());
+				nNum += sprintf(&str[nNum], "制御点 Z[+][-]：%.1f\n", CControl::GetContorolBezierZ());
+				nNum += sprintf(&str[nNum], "移動(通過点の数) [+][-]：%.0f\n", CControl::Getmove3d().x);
+
+				nNum += sprintf(&str[nNum], "軌跡１色 [+][-]：(%d %d %d %d)\n", CControl::GetParticleColor(1), CControl::GetParticleColor(2), CControl::GetParticleColor(3), CControl::GetParticleColor(4));
+				nNum += sprintf(&str[nNum], "軌跡１増減 [+][-]：(%d %d %d %d)\n", CControl::GetParticleAddCol(1), CControl::GetParticleAddCol(2), CControl::GetParticleAddCol(3), CControl::GetParticleAddCol(4));
+
+				nNum += sprintf(&str[nNum], "軌跡２色 [+][-]：(%d %d %d %d)\n", CControl::GetTrajectColor(1), CControl::GetTrajectColor(2), CControl::GetTrajectColor(3), CControl::GetTrajectColor(4));
+				nNum += sprintf(&str[nNum], "軌跡２増減 [+][-]：(%d %d %d %d)\n", CControl::GetTrajectCol(1), CControl::GetTrajectCol(2), CControl::GetTrajectCol(3), CControl::GetTrajectCol(4));
+				nNum += sprintf(&str[nNum], "軌跡サイズ [+][-]：%.1f\n", CControl::GetMaxSize());
+				nNum += sprintf(&str[nNum], "軌跡テクスチャ [+][-]：%d\n", CControl::GetSecondTex());
+				nNum += sprintf(&str[nNum], "軌跡寿命 [+][-]：%d\n", CControl::GetParticleTime());
+				nNum += sprintf(&str[nNum], "ターゲットランダム距離 [+][-]：%.1f\n", CControl::GetDistance());
+				nNum += sprintf(&str[nNum], "軌跡合成 [+][-]：%d\n", CControl::GetParticleSynthetic());
+
+				break;
+			default:
 				break;
 			}
 			nNum += sprintf(&str[nNum], "\n");
@@ -401,20 +452,42 @@ void CRenderer::DrawText()
 //*****************************************************************************
 void CRenderer::DrawTextLeft()
 {
-	CManager::MODE mode = CManager::GetMode();
 
-	RECT rect = { 1100, 30, SCREEN_WIDTH, SCREEN_HEIGHT };
+	RECT rect = { 900, 30, SCREEN_WIDTH, SCREEN_HEIGHT };
 	char str[1024];
 
 	int nNum = sprintf(&str[0], "\n");
 
 	if (CManager::MODE mode = CManager::GetMode())
 	{
-		nNum += sprintf(&str[nNum], "プリセット再生[F1]\n");
+		nNum += sprintf(&str[nNum], "テクスチャ移動 U [+][-]：%.3f\n", CControl::GetTexMoveU());
+		nNum += sprintf(&str[nNum], "テクスチャ移動 V [+][-]：%.3f\n", CControl::GetTexMoveV());
+		nNum += sprintf(&str[nNum], "テクスチャ枚数 U [+][-]：%.1f\n", CControl::GetTexNum().x);
+		nNum += sprintf(&str[nNum], "テクスチャ枚数 V [+][-]：%.1f\n", CControl::GetTexNum().y);
 
-		if (CControl::GetPattern() == 3)
+		nNum += sprintf(&str[nNum], "テクスチャ分割数 U [+][-]：%.0f\n", CControl::GetSplitU());
+		nNum += sprintf(&str[nNum], "テクスチャ分割数 V [+][-]：%.0f\n", CControl::GetSplitV());
+		nNum += sprintf(&str[nNum], "パターンカウント  [+][-]：%d\n", CControl::GetAnimCont());
+
+
+		nNum += sprintf(&str[nNum], "プリセット再生[F1]\n");
+		nNum += sprintf(&str[nNum], "全てのプリセット再生[F2]\n");
+		nNum += sprintf(&str[nNum], "時間差付きでプリセット再生[F3]\n");
+
+		switch (CControl::GetPattern())
 		{
+
+		case(1):
+			break;
+		case(2):
+			break;
+		case(3):
+		case(4):
 			nNum += sprintf(&str[nNum], "再生[SPACE]\n");
+
+			break;
+		default:
+			break;
 		}
 	}
 

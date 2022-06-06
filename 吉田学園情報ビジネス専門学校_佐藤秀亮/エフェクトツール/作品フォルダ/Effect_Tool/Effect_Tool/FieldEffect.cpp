@@ -103,8 +103,7 @@ void CFieldEffect::Update()
 	m_pos = GetPos();
 
 	float fAngle;
-	float RandY;
-	int Y = (int)m_fDistance;
+	float fAngle2;
 
 	//カラーの変動
 	m_FieldColor.r += m_FieldAddColor.r;
@@ -149,10 +148,9 @@ void CFieldEffect::Update()
 	}
 
 	float moveMin = m_ParticleMove3d * -1 / 1.5f;
-	float Life = m_nParticleLife ;
+	int Life = m_nParticleLife ;
 	float Size = m_ParticleAddSize / 1.5f;
 	float AddR = fAddRotate * 30;
-	float Distance = m_fDistance / 1.5f;
 	//フィールドの動き
 	switch (EffectTime)
 	{
@@ -168,19 +166,31 @@ void CFieldEffect::Update()
 			for (int i = 0; i < m_nDensity + 20; i++)
 			{
 				fAngle = CIRCLE;
-				RandY = float(rand() % Y / 3) + 5;
+				fAngle2 = CIRCLE;
 
-				CStraight3D::Create(D3DXVECTOR3(sinf(fAngle) * Distance, RandY / 1.5, cosf(fAngle) * Distance),
+				CStraight3D::Create(
+					D3DXVECTOR3(
+						m_fDistance  * sinf(fAngle) * cosf(fAngle2),
+						m_fDistance / 2 * cosf(fAngle),
+						m_fDistance  * sinf(fAngle) * sinf(fAngle2)
+					),
+
 					D3DXVECTOR3(m_ParticleSize, m_ParticleSize, 0.0f),
-					D3DXVECTOR3(Size, Size, 0.0f),
+					D3DXVECTOR3(m_ParticleAddSize, m_ParticleAddSize, 0.0f),
 					D3DXVECTOR3(moveMin, 0.0f, 0.0f),
 					m_ParticleColor,
 					m_ParticleAddColor,
 					m_nParticleTex,
-					Life,
+					m_nParticleLife,
 					CStraight3D::TARGET,
 					m_pos,
-					m_nParticleSynthetic);
+					m_nParticleSynthetic,0,
+					(CStraight3D::RAND_PATTEN)0,
+					(CStraight3D::POS_PATTERN)0,
+					D3DXVECTOR2(0.0f, 0.0f),
+					D3DXVECTOR2(1.0f, 1.0f),
+					0,
+					D3DXVECTOR2(1.0f,1.0f));
 			}
 
 		}
@@ -200,8 +210,11 @@ void CFieldEffect::Update()
 			for (int i = 0; i < m_nDensity; i++)
 			{
 				fAngle = CIRCLE;
-				RandY = float(rand() % Y) + 10;
-				CStraight3D::Create(D3DXVECTOR3(sinf(fAngle) * m_fDistance, RandY / 2, cosf(fAngle) * m_fDistance),
+				fAngle2 = CIRCLE;
+
+				CStraight3D::Create(
+					m_pos,
+
 					D3DXVECTOR3(m_ParticleSize, m_ParticleSize, 0.0f),
 					D3DXVECTOR3(m_ParticleAddSize, m_ParticleAddSize, 0.0f),
 					D3DXVECTOR3(m_ParticleMove3d, 0.0f, 0.0f),
@@ -211,8 +224,14 @@ void CFieldEffect::Update()
 					m_nParticleLife,
 					CStraight3D::TARGET,
 					m_pos,
-					m_nParticleSynthetic);
-
+					m_nParticleSynthetic,
+					m_fDistance,
+					(CStraight3D::RAND_PATTEN)0,
+					(CStraight3D::POS_PATTERN)2,
+					D3DXVECTOR2(0.0f,0.0f),
+					D3DXVECTOR2(1.0f, 1.0f),
+					0,
+					D3DXVECTOR2(1.0f, 1.0f));
 				Time = (int)(rand() % nParticleTime) + 1;
 			}
 		}
@@ -238,12 +257,15 @@ void CFieldEffect::Update()
 
 		if (m_size < 10)
 		{
+			bUninit = true;
+
 			for (int i = 0; i < m_nDensity + 10; i++)
 			{
 				fAngle = CIRCLE;
-				RandY = float(rand() % Y / 3) + 5;
+				fAngle2 = CIRCLE;
 
-				CStraight3D::Create(D3DXVECTOR3(sinf(fAngle)* Distance / 6, RandY / 5, cosf(fAngle) * Distance / 6),
+				CStraight3D::Create(
+					m_pos,
 					D3DXVECTOR3(m_ParticleSize, m_ParticleSize, 0.0f),
 					D3DXVECTOR3(Size, Size, 0.0f),
 					D3DXVECTOR3(moveMin / 2 , 0.0f, 0.0f),
@@ -253,12 +275,16 @@ void CFieldEffect::Update()
 					Life,
 					CStraight3D::TARGET,
 					m_pos,
-					m_nParticleSynthetic);
+					m_nParticleSynthetic,
+					m_fDistance,
+					(CStraight3D::RAND_PATTEN)0,
+					(CStraight3D::POS_PATTERN)2,
+					D3DXVECTOR2(0.0f, 0.0f),
+					D3DXVECTOR2(1.0f, 1.0f),
+					0,
+					D3DXVECTOR2(1.0f, 1.0f));
 			}
 
-
-
-			bUninit = true;
 		}
 		break;
 	default:

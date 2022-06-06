@@ -50,7 +50,7 @@ HRESULT CScene2D::Init(D3DXVECTOR3 pos)
 	// 頂点情報を設定
 	LPDIRECT3DDEVICE9 pDevice = CManager::GetRenderer()->GetDevice();//デバイスの取得
 
-																	 //頂点バッファの生成
+	 //頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &m_pVtxBuff, NULL);
 	VERTEX_2D*pVtx;//頂点情報へのポインタ
 

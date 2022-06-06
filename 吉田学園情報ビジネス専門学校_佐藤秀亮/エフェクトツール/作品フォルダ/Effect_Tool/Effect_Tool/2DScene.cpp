@@ -15,6 +15,8 @@
 #include "load.h"
 #include "control.h"
 
+#include "Butten.h"
+
 #endif
 
 //*****************************************************************************
@@ -54,7 +56,7 @@ HRESULT C2DScene::Init(D3DXVECTOR3 /*pos*/)
 	m_Set = CSetEffect::Create(D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0),10, 10, -1);
 
 
-	CLoad::Load2D(SET_TEXT_2D);
+	CLoad::LoadButten(SET_TEXT_2D);
 	CControl::SetPlayerMode(false);
 
 	//フェード
@@ -82,6 +84,7 @@ void C2DScene::Update()
 		if (m_pKeyboard->GetKey(DIK_RETURN) == true)
 		{
 			CFade::SetFade(CManager::MODE_3D);
+			CButten::ResetPatten();
 			CControl::SetPattern(0);
 		}
 	}

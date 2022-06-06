@@ -17,6 +17,7 @@
 
 #include "LoadEffect.h"
 #include "PresetSetEffect.h"
+#include "Butten.h"
 
 #endif
 
@@ -60,8 +61,9 @@ HRESULT C3DScene::Init(D3DXVECTOR3 /*pos*/)
 	m_pKeyboard = CManager::GetKeyboard();
 
 	CLoad::Load(FILE3D);
-	CLoad::Load2D(SET_TEXT_3D);
+	CLoad::LoadButten(SET_TEXT_3D);
 
+	CLoadEffect::EffectOrder(LOAD_PRESET_TEXT);
 	CLoadEffect::EffectStateLoad(LOAD_PRESET_TEXT);
 
 	CControl::SetPlayerMode(true);
@@ -92,6 +94,34 @@ void C3DScene::Uninit()
 //***************************************************************************** 
 void C3DScene::Update()
 {
+	if (m_pKeyboard != NULL)
+	{
+		if (m_pKeyboard->GetKey(DIK_RETURN) == true)
+		{
+			CControl::SetPlayerMode(true);
+			CFade::SetFade(CManager::MODE_2D);
+			CControl::SetPattern(0);
+			CButten::ResetPatten();
+		}
+
+		if (m_pKeyboard->GetKey(DIK_F1) == true)
+		{
+			CPresetEffect::SetEffect3D(m_nPattarn, D3DXVECTOR3(0.0f, 0.0f, 0.0f), {});
+		}
+
+		if (m_pKeyboard->GetKey(DIK_F2) == true)
+		{
+			for (int nCnt = 0; nCnt < CLoadEffect::GetPresetTotal(); nCnt++)
+			{
+				CPresetEffect::SetEffect3D(nCnt, D3DXVECTOR3(0.0f, 50.0f, 0.0f), {});
+			}
+		}
+		if (m_pKeyboard->GetKey(DIK_F3) == true)
+		{
+			CPresetEffect::CallOrder3D(0, D3DXVECTOR3(0.0f, 50.0f, 0.0f), {});
+		}
+
+	}
 
 }
 
@@ -102,22 +132,6 @@ void C3DScene::Update()
 void C3DScene::Draw()
 {
 
-	if (m_pKeyboard != NULL)
-	{
-		if (m_pKeyboard->GetKey(DIK_RETURN) == true)
-		{
-			CControl::SetPlayerMode(true);
-			CFade::SetFade(CManager::MODE_2D);
-			CControl::SetPattern(0);
-		}
-
-		if (m_pKeyboard->GetKey(DIK_F1) == true)
-		{
-
-			CPresetEffect::SetEffect3D(m_nPattarn, D3DXVECTOR3(0.0f, 0.0f, 0.0f), {});
-
-		}
-	}
 }
 
 //*****************************************************************************

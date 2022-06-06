@@ -27,23 +27,39 @@ CBillEffect::CBillEffect(int nPriority) : CPlane::CPlane(nPriority)
 //=============================================================================
 CBillEffect::~CBillEffect()
 {
-
+	
 }
 
 //=============================================================================
 // 初期化
 //=============================================================================
-HRESULT CBillEffect::Init(D3DXVECTOR3 Size, D3DXVECTOR3 MinSize, D3DCOLORVALUE color, D3DCOLORVALUE Mincolor, int nTex, int nLife)
+HRESULT CBillEffect::Init(D3DXVECTOR3 Size,
+	D3DXVECTOR3 MinSize,
+	D3DCOLORVALUE color,
+	D3DCOLORVALUE Mincolor,
+	int nTex, int nLife,
+	D3DXVECTOR2 TexNum,
+	D3DXVECTOR2 TexMove,
+	int nAnimCounter,
+	D3DXVECTOR2 nSplit)
 {
-	CPlane::Init(Size, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR2(1.0f, 1.0f));
+	CPlane::Init(Size, D3DXVECTOR3(0.0f, 0.0f, 0.0f), TexNum);
 	SetTexture(nTex);
 
 
 	m_Size = Size;			//大きさ
 	m_MinSize = MinSize;	//大きさ変動
 
-							//カラー
+	m_TexSize = TexMove;
+
+	//カラー
 	m_Color = color;
+
+	m_MaxSplit = nSplit;
+	m_PatternSize = D3DXVECTOR2(1.0f / m_MaxSplit.x, 1.0f / m_MaxSplit.y);
+	m_nAnimCount = nAnimCounter;
+	m_nSetAnimCnt = nAnimCounter;
+
 
 	//カラー変動
 	m_MinColor = Mincolor;
@@ -68,21 +84,12 @@ void CBillEffect::Uninit()
 void CBillEffect::Update()
 {
 
-	m_Size += m_MinSize;		//サイズ変更
-
 	//カラー変更
 	m_Color.r += m_MinColor.r;
 	m_Color.g += m_MinColor.g;
 	m_Color.b += m_MinColor.b;
 	m_Color.a += m_MinColor.a;
 
-
-	//サイズが0を下回りそう
-	if (m_Size.x <= 0 ||
-		m_Size.y <= 0)
-	{
-		m_bUninit = true;
-	}
 
 	//カラー値が0を下回りそう
 	if (m_Color.r <= 0)
@@ -102,6 +109,8 @@ void CBillEffect::Update()
 		m_Color.a = 0;
 	}
 
+	
+
 	//カラー値がMAX_COLORを上回りそう
 	if (m_Color.r >= MAX_COLOR)
 	{
@@ -120,9 +129,27 @@ void CBillEffect::Update()
 		m_Color.a = MAX_COLOR;
 	}
 
+	//テクスチャアニメーション
+	if (m_nAnimCount >= 0)
+	{
+		m_nAnimCount--;
+		if (m_nAnimCount < 0)
+		{
+			m_nAnimCount = m_nSetAnimCnt;
+			m_nSplit.x++;
+			m_nSplit.y++;
+		}
+		if (m_MaxSplit > m_MaxSplit)
+		{
+			m_nSplit.x = 0;
+			m_nSplit.y = 0;
+		}
+	}
+
 	//それぞれ適応
-	ChangeSize(m_Size);
 	CPlane::ColorChange(m_Color);
+	CPlane::TexturMove(m_TexSize);
+	CPlane::SetTexAnim(m_nSplit, m_PatternSize);
 
 	//寿命減少
 	m_nLife--;
@@ -136,7 +163,6 @@ void CBillEffect::Update()
 	{
 		Uninit();
 	}
-
 }
 
 //=============================================================================

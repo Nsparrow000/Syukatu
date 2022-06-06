@@ -15,6 +15,8 @@
 #include "control.h"
 
 #include "MeshEffect.h"
+#include "Sphere.h"
+
 #include <assert.h>
 //Ã“Iƒƒ“ƒo•Ï”
 CRenderer *CManager::m_pRenderer = NULL;
@@ -61,6 +63,7 @@ HRESULT CManager::Init(HINSTANCE hInstance, HWND hWnd, bool bWindow)
 	CScene2D::CreateTexture();
 	CPlane::CreateTextureFiled();
 	CMeshEffect::CreateTextureMesh();
+	CSphere::CreateTextureSphere();
 
 	CControl::Init();
 	return S_OK;

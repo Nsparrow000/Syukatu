@@ -9,7 +9,7 @@
 #include "scene3d.h"
 
 //マクロ定義
-#define MAX_TEXTURE_FILED (16)
+#define MAX_TEXTURE_FILED (24)
 
 class CPlane : public CScene3D
 {
@@ -30,8 +30,14 @@ public:
 	//エフェクト用関数
 	void ColorChange(D3DCOLORVALUE color);	//色変更
 	void ChangeSize(D3DXVECTOR3 size);	//サイズ変更
+	void BillboardSize(float size);	//サイズ変更
 
+	void TexturMove(D3DXVECTOR2 MoveTex);
+
+	void SetTexAnim(D3DXVECTOR2 TexPattern, D3DXVECTOR2 TexAnimSize);
 	void SetPosField(D3DXVECTOR3 pos, D3DXVECTOR3 Size, float Rotate,float Rotate2);
+
+	void SetPosBill(D3DXVECTOR3 pos, D3DXVECTOR3 pos2, D3DXVECTOR3 pos3, D3DXVECTOR3 pos4);
 
 	static CPlane *Create(D3DXVECTOR3 size, D3DXVECTOR3 pos, D3DXVECTOR2 Tex);
 	static void CreateTextureFiled();
@@ -44,10 +50,21 @@ private:
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = NULL; //頂点バッファへのポインタ
 	D3DXVECTOR3 m_size;
 	static int m_nMaxTex;					   //使用する最大テクスチャ
-
+	static int m_Synthetic;
 protected:
 	static LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEXTURE_FILED];	//テクスチャへのポインタ
+
 	int m_nTexType;												//貼るテクスチャ
+	D3DXVECTOR2 m_TexNum;
+	D3DXVECTOR2 m_TexMove;
+	D3DXVECTOR2 m_TexSize;
+	D3DXVECTOR2 m_PatternSize;
+
+	int m_nAnimCount;
+	int m_nSetAnimCnt;
+	D3DXVECTOR2 m_nSplit;
+	D3DXVECTOR2 m_MaxSplit;
+
 };
 
 #endif

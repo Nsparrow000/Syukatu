@@ -13,14 +13,21 @@
 
 #include "Trajectory.h"
 #include "straight3d.h"
+#include "BezierBillh.h"
 
 #include "control.h"
+#include "Butten.h"
 
 #include <assert.h>
 
 //=============================================================================
 //静的
 //=============================================================================
+bool CPlayer::m_MouseButtenPush = false;
+int CPlayer::m_MousePushTime = 0.0f;
+
+bool CPlayer::m_PushDeley = false;
+int CPlayer::m_DeleyTime = 0.0f;
 
 //=============================================================================
 //マクロ
@@ -90,9 +97,9 @@ void CPlayer::Update()
 		m_bJump = true;
 	}
 
-	//プレイヤー操作モード
-	if (CControl::GetPlayerMode() == true)
-	{
+	////プレイヤー操作モード
+	//if (CControl::GetPlayerMode() == true)
+	//{
 		if (m_pKeyboard != NULL)
 		{
 			//カメラから見て移動関連
@@ -184,16 +191,16 @@ void CPlayer::Update()
 			m_bJump = true;
 		}
 
-	}
-	else
-	{
-		/*ニュートラルモーション以外はニュートラルモーションへ
-			(アクションモーションは例外)*/
-		if (m_motionType != CPlayer::MOTIONTYPE_NEUTRAL && m_motionType != CPlayer::MOTIONTYPE_ACTION)
-		{
-			MotionChange(CPlayer::MOTIONTYPE_NEUTRAL);
-		}
-	}
+	//}
+	//else
+	//{
+		///*ニュートラルモーション以外はニュートラルモーションへ
+		//	(アクションモーションは例外)*/
+		//if (m_motionType != CPlayer::MOTIONTYPE_NEUTRAL && m_motionType != CPlayer::MOTIONTYPE_ACTION)
+		//{
+		//	MotionChange(CPlayer::MOTIONTYPE_NEUTRAL);
+		//}
+	//}
 
 
 	//マウスの入力
@@ -208,7 +215,7 @@ void CPlayer::Update()
 		}
 
 		//左クリックでアクションモーション
-		if (m_pMouse->GetMouseButton(CMouse::DIM_L) == true)
+		if (m_pMouse->GetMouseButton(CMouse::DIM_R) == true)
 		{
 			MotionChange(CPlayer::MOTIONTYPE_ACTION);
 		}
@@ -291,7 +298,36 @@ void CPlayer::Update()
 	}
 	if (CControl::GetPattern() == 2)
 	{
+	}
+	if (m_pMouse->GetMouseButton(CMouse::DIM_L) == true)
+	{
 		CreateEffect(CControl::GetPattern());
+		m_MouseButtenPush = true;
+	}
+	if (m_MouseButtenPush == true)
+	{
+		m_MousePushTime++;
+
+		if (m_MousePushTime >= 20)
+		{
+			m_PushDeley = true;
+		}
+		if (m_PushDeley == true)
+		{
+			m_DeleyTime++;
+			if (m_DeleyTime > 0)
+			{
+				m_DeleyTime = 0;
+				CreateEffect(CControl::GetPattern());
+			}
+		}
+	}
+
+	if (m_pMouse->GetRelease(CMouse::DIM_L) == true)
+	{
+		m_PushDeley = false;
+		m_MouseButtenPush = false;
+		m_MousePushTime = 0;
 	}
 
 	Motion();	//モデル動かし
@@ -301,6 +337,8 @@ void CPlayer::Update()
 //エフェクト作成
 void CPlayer::CreateEffect(int nPattern)
 {
+	D3DXVECTOR3 rot = GetRot();
+
 	D3DXVECTOR3 Vectl;
 	int Vectlx;
 	int Vectly;
@@ -319,6 +357,8 @@ void CPlayer::CreateEffect(int nPattern)
 
 	float fA;
 
+	D3DXVECTOR3 pos = GetPos();
+
 	switch (nPattern)
 	{
 	case(0):	//軌跡のみ
@@ -333,7 +373,7 @@ void CPlayer::CreateEffect(int nPattern)
 			D3DXCOLOR((float)CControl::GetTrajectCol(1), (float)CControl::GetTrajectCol(2), (float)CControl::GetTrajectCol(3), (float)CControl::GetTrajectCol(4)),
 			D3DXVECTOR3(0.0, CControl::GetSize(), 0.0),
 			D3DXVECTOR3(0.0, CControl::GetChangeSize(), 0.0),
-			CControl::GetTex(), CControl::GetLife());
+			CControl::GetTex(), CControl::GetLife(),CControl::GetSynthetic());
 		break;
 	case(1):
 		break;
@@ -412,11 +452,43 @@ void CPlayer::CreateEffect(int nPattern)
 				D3DXVECTOR3(sinf(fA) * x, y, cosf(fA) * z),
 				D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
 				D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
-				CControl::GetTex(), CControl::GetLife(), CStraight3D::STRAIGHT, {}, CControl::GetSynthetic());
+				CControl::GetTex(), CControl::GetLife(), CStraight3D::STRAIGHT, {}, CControl::GetSynthetic(),
+				0,
+				(CStraight3D::RAND_PATTEN)0,
+				(CStraight3D::POS_PATTERN)3,
+				D3DXVECTOR2(CControl::GetTexMoveU(),CControl::GetTexMoveV()),
+				CControl::GetTexNum(),
+				CControl::GetAnimCont(),
+				D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()));
+		}
+		break;
+	case(8):
+		for (int nCnt = 0; nCnt < CControl::GetDensity(); nCnt++)
+		{
+			CBezierBill::Create(
+				D3DXVECTOR3(CControl::GetSize(), CControl::GetSize(), 0.0f),
+				D3DXVECTOR3(CControl::GetChangeSize(), CControl::GetChangeSize(), 0.0f),
+				D3DXCOLOR((float)CControl::GetControlCoror(1), (float)CControl::GetControlCoror(2), (float)CControl::GetControlCoror(3), (float)CControl::GetControlCoror(4)),
+				D3DXCOLOR((float)CControl::GetChangeCol(1), (float)CControl::GetChangeCol(2), (float)CControl::GetChangeCol(3), (float)CControl::GetChangeCol(4)),
+				CControl::GetTex(), CControl::GetLife(),
+				CControl::GetTexNum(),
+				D3DXVECTOR2(CControl::GetTexMoveU(), CControl::GetTexMoveV()),
+				CControl::GetAnimCont(),
+				D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()),
+				D3DXVECTOR3(pos.x, pos.y + 30, pos.z),
+				D3DXVECTOR3(0.0f, 0.0f, 0.0f), CControl::Getmove3d().x,
+				D3DXVECTOR3(CControl::GetContorolBezierX(), CControl::GetContorolBezierY(), CControl::GetContorolBezierZ()),
+				rot,
+				CControl::GetMaxSize(),
+				D3DXCOLOR((float)CControl::GetParticleColor(1), (float)CControl::GetParticleColor(2), (float)CControl::GetParticleColor(3), (float)CControl::GetParticleColor(4)),
+				D3DXCOLOR((float)CControl::GetParticleAddCol(1), (float)CControl::GetParticleAddCol(2), (float)CControl::GetParticleAddCol(3), (float)CControl::GetParticleAddCol(4)),
+				D3DXCOLOR((float)CControl::GetTrajectColor(1), (float)CControl::GetTrajectColor(2), (float)CControl::GetTrajectColor(3), (float)CControl::GetTrajectColor(4)),
+				D3DXCOLOR((float)CControl::GetTrajectCol(1), (float)CControl::GetTrajectCol(2), (float)CControl::GetTrajectCol(3), (float)CControl::GetTrajectCol(4)),
+				0.0f,CControl::GetSecondTex(),CControl::GetParticleTime(),CControl::GetDistance(),CControl::GetSynthetic(),
+				CControl::GetParticleSynthetic()); 
 		}
 		break;
 	default:
-		assert(false);
 		break;
 	}
 }

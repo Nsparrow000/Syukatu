@@ -219,7 +219,6 @@ void CSetEffect::SetEffect(int nPatern)
 		case(3):
 			break;
 		default:
-			assert(false);
 			break;
 		}
 	}

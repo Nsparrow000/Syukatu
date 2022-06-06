@@ -12,17 +12,27 @@
 
 #include <assert.h>
 
+
 //*****************************************************************************
 //静的
 //*****************************************************************************
 POINT CButten::m_po = {};
 D3DXVECTOR2 CButten::m_Mousepos = {};
+int CButten::m_nPatten = {};
+int CButten::m_nButtenTotal = 0;
+int CButten::m_nTotal[MAX_BUTTENPATTERN] = {};
 
+bool CButten::m_MouseButtenPush = false;
+int CButten::m_MousePushTime = 0.0f;
+
+bool CButten::m_PushDeley = false;
+int CButten::m_DeleyTime = 0.0f;
+
+CButten::BUTTEN_STATE CButten::ButtenState[MAX_BUTTENPATTERN][MAX_BUTTEN] = {};
 //*****************************************************************************
 //マクロ
 //*****************************************************************************
 #define LOAD_PRESET_TEXT "data/Preset.txt"
-
 //*****************************************************************************
 //コンストラクタ
 //*****************************************************************************
@@ -31,6 +41,8 @@ CButten::CButten(int nPriority) : CScene2D(nPriority)
 	m_Mousepos = {};
 	m_po.x = SCREEN_WIDTH / 2;
 	m_po.y = SCREEN_HEIGHT / 2;
+
+	ButtenState[MAX_BUTTENPATTERN][MAX_BUTTEN] = {};
 }
 
 //*****************************************************************************
@@ -90,7 +102,6 @@ void CButten::Update()
 {
 	D3DXVECTOR3 pos = GetPosition();
 
-	bool bMousecursor = CControl::GetMouseCursor();
 
 	//マウス座標
 	m_Mousepos.x = CManager::GetRenderer()->GetMousePos().x;
@@ -109,7 +120,29 @@ void CButten::Update()
 			if (m_pMouse->GetMouseButton(CMouse::DIM_L) == true)
 			{
 				m_fAlpha = 150.0f;
-				Set(m_aOperation, m_nNum, m_nIndeNum);
+				Set(m_aOperation, m_nIndeNum);
+
+				m_MouseButtenPush = true;
+			}
+			if (m_MouseButtenPush == true)
+			{
+				m_MousePushTime++;
+
+				if (m_MousePushTime >= 20)
+				{
+					m_PushDeley = true;
+				}
+				if (m_PushDeley == true)
+				{
+					m_DeleyTime++;
+					if (m_DeleyTime > 5)
+					{
+						m_DeleyTime = 0;
+						m_fAlpha = 150.0f;
+						Set(m_aOperation, m_nIndeNum);
+
+					}
+				}
 			}
 		}
 		else
@@ -122,7 +155,12 @@ void CButten::Update()
 		m_fAlpha = 0.0f;
 	}
 
-
+	if (m_pMouse->GetRelease(CMouse::DIM_L) == true)
+	{
+		m_PushDeley = false;
+		m_MouseButtenPush = false;
+		m_MousePushTime = 0;
+	}
 
 	if (aDisplay == CHANGE)
 	{
@@ -132,7 +170,7 @@ void CButten::Update()
 		}
 	}
 
-	CScene2D::FadeColorChange(m_fAlpha);
+	CScene2D::FadeColorChange((int)m_fAlpha);
 	SetPosition(pos);
 	//破棄
 	if (m_bUninit == true)
@@ -168,22 +206,22 @@ CButten *CButten::Create(D3DXVECTOR3 pos, float SizeX, float SizeY, int nType, O
 //*****************************************************************************
 //数値の変化
 //*****************************************************************************
-void CButten::Set(OPERATION Operation, int nNum, float nIndeNum)
+void CButten::Set(OPERATION Operation, float nIndeNum)
 {
 	switch (Operation)
 	{
 	case(PATTERN):
-		CControl::AddPattern(nIndeNum);
+		CControl::AddPattern((int)nIndeNum);
 		
 		break;
 	case(COLSELECT):
-		CControl::AddSelectCol(nIndeNum);
+		CControl::AddSelectCol((int)nIndeNum);
 		break;
 	case(COL):
-		CControl::AddColor(nIndeNum, CControl::GetSerectColor());
+		CControl::AddColor((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(ADDCOL):
-		CControl::AddChangeCol(nIndeNum, CControl::GetSerectColor());
+		CControl::AddChangeCol((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(SIZE):
 		CControl::AddSize(nIndeNum);
@@ -192,16 +230,16 @@ void CButten::Set(OPERATION Operation, int nNum, float nIndeNum)
 		CControl::AddChangeSize(nIndeNum);
 		break;
 	case(LIFE):
-		CControl::AddLife(nIndeNum);
+		CControl::AddLife((int)nIndeNum);
 		break;
 	case(DENSITY):
-		CControl::AddDensity(nIndeNum);
+		CControl::AddDensity((int)nIndeNum);
 		break;
 	case(DIFFUSION):
-		CControl::AddDiffusion(nIndeNum);
+		CControl::AddDiffusion((int)nIndeNum);
 		break;
 	case(TEXTURE):
-		CControl::AddTexture(nIndeNum);
+		CControl::AddTexture((int)nIndeNum);
 		break;
 	case(ROTATE):
 		CControl::AddRotateAdd(nIndeNum);
@@ -240,20 +278,20 @@ void CButten::Set(OPERATION Operation, int nNum, float nIndeNum)
 		CControl::AddMoveYAdd(nIndeNum);
 		break;
 	case(DESTROY):
-		CControl::AddUninitVectl(nIndeNum);
+		CControl::AddUninitVectl((int)nIndeNum);
 		break;
 
 	case(TRAJECTTOP):
-		CControl::AddTrajectTop(nIndeNum);
+		CControl::AddTrajectTop((int)nIndeNum);
 		break;
 	case(TRAJECTTOPCOL):
-		CControl::TrajectColor(nIndeNum, CControl::GetSerectColor());
+		CControl::TrajectColor((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(TRAJECTTOPADDCOL):
-		CControl::AddTrajectCol(nIndeNum, CControl::GetSerectColor());
+		CControl::AddTrajectCol((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(TRAJECTCUR):
-		CControl::AddTrajectCur(nIndeNum);
+		CControl::AddTrajectCur((int)nIndeNum);
 		break;
 	case(MOVE3DX):
 		CControl::Addmove3d(nIndeNum,0);
@@ -265,22 +303,22 @@ void CButten::Set(OPERATION Operation, int nNum, float nIndeNum)
 		CControl::Addmove3d(nIndeNum, 2);
 		break;
 	case(RANDMOVE3D):
-		CControl::AddRandMove(nIndeNum);
+		CControl::AddRandMove((int)nIndeNum);
 		break;
 	case(SYNTHETIC):
-		CControl::AddSynthetic(nIndeNum);
+		CControl::AddSynthetic((int)nIndeNum);
 		break;
 	case(PARTICLESIZE):
 		CControl::AddParticleSize(nIndeNum);
 		break;
 	case(PARTICLETIME):
-		CControl::AddParticleTime(nIndeNum);
+		CControl::AddParticleTime((int)nIndeNum);
 		break;
 	case(DISTANCE):
 		CControl::AddDistance(nIndeNum);
 		break;
 	case(ACTIVETIME):
-		CControl::AddActiveTime(nIndeNum);
+		CControl::AddActiveTime((int)nIndeNum);
 		break;
 	case(MAXSIZE):
 		CControl::AddMaxSize(nIndeNum);
@@ -289,24 +327,113 @@ void CButten::Set(OPERATION Operation, int nNum, float nIndeNum)
 		CControl::AddParticleAddSize(nIndeNum);
 		break;
 	case(PARTICLECOLOR):
-		CControl::AddParticleColor(nIndeNum, CControl::GetSerectColor());
+		CControl::AddParticleColor((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(PARTICLEADDCOLOR):
-		CControl::AddParticleAddCol(nIndeNum, CControl::GetSerectColor());
+		CControl::AddParticleAddCol((int)nIndeNum, CControl::GetSerectColor());
 		break;
 	case(PARTICLESYNSETIC):
-		CControl::AddParticleSynthetic(nIndeNum);
+		CControl::AddParticleSynthetic((int)nIndeNum);
 		break;
 	case(ACTIVEADDSIZE):
 		CControl::AddAvctiveAddSize(nIndeNum);
 		break;
 	case(PRESETLOAD):
-		//CLoadEffect::PresetTotal(LOAD_PRESET_TEXT);
+		CLoadEffect::EffectOrder(LOAD_PRESET_TEXT);
 		CLoadEffect::EffectStateLoad(LOAD_PRESET_TEXT);
-		break;
 
+		break;
+	case(SCONDTIME):
+		CControl::AddSecondTime((int)nIndeNum);
+		break;
+	case(VTX):
+		CControl::AddVtx((int)nIndeNum);
+		break;
+	case(TYPE):
+		CControl::AddType((int)nIndeNum);
+		break;
+	case(TEXU):
+		CControl::AddTexMoveU(nIndeNum);
+		break;
+	case(TEXV):
+		CControl::AddTexMoveV(nIndeNum);
+		break;
+	case(TEXNUM):
+		CControl::AddTexNumU(nIndeNum);
+		break;
+	case(SECONDTYPE):
+		CControl::AddSecondType(nIndeNum);
+		break;
+	case(TEXSPLITU):
+		CControl::AddSplitU(nIndeNum);
+		break;
+	case(TEXSPLITV):
+		CControl::AddSplitV(nIndeNum);
+		break;
+	case(ANIMCONT):
+		CControl::AddAnimCont(nIndeNum);
+		break;
+	case(TEXNUMV):
+		CControl::AddTexNumV(nIndeNum);
+		break;
+	case(HIGTH):
+		CControl::AddHigth(nIndeNum);
+		break;
+	case(CONTROLBEZIERX):
+		CControl::AddContorolBezierX(nIndeNum);
+		break;
+	case(CONTROLBEZIERY):
+		CControl::AddContorolBezierY(nIndeNum);
+		break;
+	case(CONTROLBEZIERZ):
+		CControl::AddContorolBezierZ(nIndeNum);
+		break;
+	case(SECONDTEX):
+		CControl::AddSecondTex(nIndeNum);
+		break;
 	default:
 		assert(false);
 		break;
+	}
+}
+
+//*****************************************************************************
+//ボタンステータスの格納
+//*****************************************************************************
+void CButten::SetButtenState(D3DXVECTOR3 pos,
+	float SizeX, float SizeY,
+	int nType,
+	OPERATION Operation,
+	float nIndeNum,
+	DISPLAY_PATTERN Pattern)
+{
+	ButtenState[m_nPatten][m_nButtenTotal].m_pos = pos;
+	ButtenState[m_nPatten][m_nButtenTotal].m_SizeX = SizeX;
+	ButtenState[m_nPatten][m_nButtenTotal].m_SizeY = SizeY;
+	ButtenState[m_nPatten][m_nButtenTotal].m_nType = nType;
+	ButtenState[m_nPatten][m_nButtenTotal].m_Operation = Operation;
+	ButtenState[m_nPatten][m_nButtenTotal].m_nIndeNum = nIndeNum;
+	ButtenState[m_nPatten][m_nButtenTotal].Pattrn = Pattern;
+
+	m_nButtenTotal++;
+}
+
+
+//*****************************************************************************
+//ボタンのセット
+//*****************************************************************************
+void CButten::SetButten(int nPatten)
+{
+	for (int nCnt = 0; nCnt < m_nTotal[nPatten]; nCnt++)
+	{
+		CButten::Create(
+			ButtenState[nPatten][nCnt].m_pos,
+			ButtenState[nPatten][nCnt].m_SizeX,
+			ButtenState[nPatten][nCnt].m_SizeY,
+			ButtenState[nPatten][nCnt].m_nType,
+			ButtenState[nPatten][nCnt].m_Operation,
+			ButtenState[nPatten][nCnt].m_nIndeNum,
+			(CButten::DISPLAY)1,
+			ButtenState[nPatten][nCnt].Pattrn);
 	}
 }

@@ -33,6 +33,7 @@ private:
 	static bool m_bPresetStart;	//プリセットの再生中
 	static int m_nPattarn;	//発生エフェクト
 
+	static int m_nTime;	//エフェクト出現タイマー
 
 	CKeyboard *m_pKeyboard;
 	CGamePad *m_pGamePad;

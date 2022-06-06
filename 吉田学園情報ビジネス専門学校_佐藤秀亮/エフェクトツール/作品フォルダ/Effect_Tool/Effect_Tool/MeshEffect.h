@@ -2,13 +2,12 @@
 // エフェクト用ポリゴン処理 [MeshEffect.h]
 // Author : 佐藤秀亮
 //=============================================================================
-
 #ifndef _MESHEFFECT_H_
 #define _MESHEFFECT_H_
 
 #include "main.h"
 #include "plane.h"
-#define MAX_TEX (16)
+#define MAX_TEX (32)
 
 class CMeshEffect : public CScene3D
 {
@@ -37,6 +36,8 @@ public:
 	static void UninitTextureMesh();
 protected:
 	bool m_bUninit;	//抹消フラグ
+	int m_Synthetic;
+
 private:
 	static LPDIRECT3DTEXTURE9 m_pTexture[MAX_TEX];
 	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff = NULL;	//頂点バッファへのポインタ
@@ -56,7 +57,6 @@ private:
 
 	EFFECT_TYPE m_atype;	//エフェクトのタイプ
 	int m_nTexType;	//テクスチャタイプ
-
 
 	static int m_nMaxTex;
 };

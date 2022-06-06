@@ -10,9 +10,9 @@
 //=============================================================================
 //マクロ
 //=============================================================================
-#define MAX_PATTERN (4)	//最大パターン
-#define MAX_DENSITY (10)		//最大密度
-#define MAX_LIFE (300)			//最大寿命
+#define MAX_PATTERN (9)	//最大パターン
+#define MAX_DENSITY (30)		//最大密度
+#define MAX_LIFE (1000)			//最大寿命
 
 //前方宣言
 class CKeyboard;
@@ -29,49 +29,31 @@ public:
 	static void Control();
 	static void Control2D();
 	static void Control3D();
-
 	static int GetControlCoror(int nSerectcolor);	//色取得
-
 	static int GetChangeCol(int nSerectcolor);	//増減値取得
 	static void SetControlCoror(int nSerectcolor);	//色セット
-
 	static bool GetRandCol(int nSerectcolor);	//色ランダム化取得
-
 	static void AddColor(int Color, int nSerect);		//色増減
 	static void AddChangeCol(int Color, int nSerect);	//色増減値の増減
-
 	static int GetSerectColor() { return m_SerectColor; }	//色選択番号
-	
 	static const float GetSize() { return m_ControlSize; }	//サイズ
 	static const float GetChangeSize() { return m_ControlChangeSize; }	//サイズ増減
-
-
 	static const int GetLife() { return m_nLife; }			//寿命
 	static const int GetTex() { return m_nTex; }				//テクスチャ
 	static const int GetDensity() { return m_nDensity; }		//密度
 	static const bool GetTap() { return m_bTap; }	//タップON or OFF
 	static const int GetPattern() { return m_nPattern; }		//パターン
-
 	static const float GetRotate() { return m_fAddRotate; }	//回転
-
 	static const bool GetRandMoveX() { return m_RandMoveX; }	//ランダムXON or OFF
 	static const bool GetRandMoveY() { return m_RandMoveY; }	//ランダムYON or OFF
-
 	static void SetColorRandom(int nSerectcol , bool bAdaptation);	//カラーランダムON or OFF
-
 	static const int GetSynthetic() { return nSynthetic; }	//合成
-
-	//2D
 	static const D3DXVECTOR2 GetMove() { return m_move; }		//初期の動き値
 	static const bool GetMouseCursor() { return m_bMouseCursor; }	//カーソル追従ON or OFF
-	//固有
 	static const D3DXVECTOR2 GetAddMove() { return m_Addmove; }		//移動加算
 	static const int GetDiffusion() { return m_Diffusion; }			//密度
 	static const int GetUninitVectl() { return m_nUninitVectl; }		//消えるベクトル
-
-	//3D
 	static const bool GetPlayerFollow() { return m_bPlayerFollow; }	//プレイヤー追従ON or OFF
-
 	static const bool GetPlayerMode()  { return m_bPlayerMode; }
 	static const void SetPlayerMode(bool bMode) {m_bPlayerMode = bMode; }
 	static const int GetModelNum() { return m_ModelNum; }
@@ -80,31 +62,43 @@ public:
 	static const int GetRandMove1() { return m_nRandMove1; }
 	static const D3DCOLORVALUE GetColor(){ return m_ControlColor; }
 	static const D3DCOLORVALUE GetChangeColor() { return m_ControlChangeCol; }
-
 	static const float GetParticleSize() { return ParticleSize; }
 	static const int GetParticleTime() { return ParticleTime; }
 	static const float GetDistance() { return fDistance; }
 	static const int GetActiveTime() { return nActiveTime; }
 	static const float GetMaxSize() { return fMaxSize; }
-
 	static const float GetParticleAddSize() {return fParticleAddSize ; }
-
 	static int GetParticleColor(int nSerect);		//色増減
 	static int GetParticleAddCol(int nSerect);	//色増減値の増減
 	static const int GetParticleSynthetic() { return nParticleSynthetic; }	//合成
 	static const float GetAvctiveAddSize() { return ActiveAddSize; }	//アクティブ中の大きさ変更
-
-	//固有
+	static int GetSecondTime() { return m_nSecondTime; }
+	static int GetVtx() { return m_nVtx; }	//球の頂点数
+	static int GetType() { return m_nType; }	//球タイプ
 	static void TrajectColor(int Color, int nSerect);
 	static int GetTrajectColor(int nSerectcolor);	//色取得
-
 	static void AddTrajectCol(int Color, int nSerect);
 	static int GetTrajectCol(int nSerectcolor);	//色取得
+	static float GetTexMoveU() { return m_TexMove.x; }	
+	static float GetTexMoveV() { return m_TexMove.y; }
+	static D3DXVECTOR2 GetTexNum() { return m_TexNum; }	//テクスチャ枚数
+	static int GetSecondType() { return m_nSecondTime; }
+	static float GetTexPatternU() { return m_TexPattern.x; }
+	static float GetTexPatternV() { return m_TexPattern.y; }
+	static int GetAnimCont() { return m_nAnimCont; }
+	static float GetSplitU() { return m_nSplit.x; }
+	static float GetSplitV() { return m_nSplit.y; }
+	static float GetHigth() { return m_fHigth; }
+
+	static float GetContorolBezierX() {return m_ContorolBezier.x; }	//制御点
+	static float GetContorolBezierY() {return m_ContorolBezier.y; }	//制御点
+	static float GetContorolBezierZ() {return m_ContorolBezier.z; }	//制御点
+	static int GetSecondTex() { return m_SecondTex; }
 
 	//テキストセーブ
 	static void SaveEffect(CManager::MODE mode, int nPattern);
-
 	static void SetButten(int nPattern);
+
 	//中間セーブ関係
 	static void SetPattern(int nPattern) { m_nPattern = nPattern; }
 	static void SetColor(D3DCOLORVALUE Color) { m_ControlColor = Color; }
@@ -120,7 +114,6 @@ public:
 	static void SetAddmove(D3DXVECTOR2 Addmove) { m_Addmove = Addmove; }
 	static void SetUninitVectl(int nUninitVectl) { m_nUninitVectl = nUninitVectl; }
 	static void SetSynthetic(int Synthetic) { nSynthetic = Synthetic; }
-
 	static void SetTrajectColor(D3DCOLORVALUE Color) { m_TrajectColor = Color; }
 	static void SetTrajectChangeColor(D3DCOLORVALUE ChangeColor) { m_TrajectChangeCol = ChangeColor; }
 	static void SetTrajectTop(int Top) { m_ModelTrajecNum = Top; }
@@ -137,7 +130,18 @@ public:
 	static void SetParticleAddCol(D3DCOLORVALUE ChangeColor) { m_ParticleAddCol = ChangeColor; }	//色増減値の増減
 	static void SetParticleSynthetic(int Synthetic) { nParticleSynthetic = Synthetic; }
 	static void SetAvctiveAddSize(float ActiveSize) { ActiveAddSize = ActiveSize; }
-
+	static void SetSecondTime(int SecondTime) { m_nSecondTime = SecondTime; }
+	static void SetVtx(int Vtx) { m_nVtx = Vtx; }
+	static void SetType(int nType) { m_nType = nType;}	//球タイプ
+	static void SetTexMoveUV(D3DXVECTOR2 TexMove) { m_TexMove = TexMove; }	//テクスチャ
+	static void SetTexNum(D3DXVECTOR2 Num) { m_TexNum = Num; }	//テクスチャ
+	static void SetSecondType(int SecondType) { m_nSecondTime = SecondType; }
+	static void SetTexPattern(D3DXVECTOR2 TexPattern) { m_TexPattern = TexPattern; }	//テクスチャ
+	static void SetnAnimCont(int nAnimCont) { m_nAnimCont = nAnimCont; }	//テクスチャ
+	static void SetnSplit(D3DXVECTOR2 nSplit) { m_nSplit = nSplit; }	//テクスチャ
+	static void SetHigth(float Higth) { m_fHigth = Higth; }	//高さ
+	static void SetControlBezier(D3DXVECTOR3 ControlBezier) { m_ContorolBezier = ControlBezier; }	//ベジェ制御点
+	static void SetSecondTex(int SecondTex) { m_SecondTex = SecondTex; }
 
 	//増減関係
 	static void AddPattern(int nPattern) {
@@ -180,35 +184,12 @@ public:
 		}
 	}
 	static void AddTexture(int nTex) { m_nTex += nTex; }
-	static void AddDensity(int nDensity) { 
-		m_nDensity += nDensity;
-		if (m_nDensity > MAX_DENSITY)
-		{
-			m_nDensity = MAX_DENSITY;
-		}
-		else if (m_nDensity <= 1)
-		{
-			m_nDensity = 1;
-		}
-	}
+	static void AddDensity(int nDensity) { m_nDensity += nDensity;}
 	static void AddRotateAdd(float fAddRotate) { m_fAddRotate += fAddRotate; }
 	static void AddDiffusion(int Diffusion) { m_Diffusion += Diffusion; }
 	static void AddUninitVectl(int nUninitVectl) { m_nUninitVectl += nUninitVectl; }
-	static void AddMoveX(float MoveX) { 
-		m_move.x += MoveX;
-		if (m_move.x <= 0)
-		{
-			m_move.x = 1;
-		}
-	}
-	static void AddMoveY(float MoveY) {
-		m_move.y += MoveY;
-		if (m_move.y <= 0)
-		{
-			m_move.y = 1;
-		}
-
-	}
+	static void AddMoveX(float MoveX) { m_move.x += MoveX;}
+	static void AddMoveY(float MoveY) {m_move.y += MoveY;}
 	static void AddMoveXAdd(float AddMoveX) { m_Addmove.x += AddMoveX; }
 	static void AddMoveYAdd(float AddMoveY) { m_Addmove.y += AddMoveY; }
 
@@ -268,6 +249,8 @@ public:
 	static void AddParticleAddSize(float ParticleAddSize) { fParticleAddSize += ParticleAddSize; }
 	static void AddAvctiveAddSize(float ActiveSize) { ActiveAddSize += ActiveSize; }
 
+	static void AddSecondTime(int nScondTime) {m_nSecondTime += nScondTime;}
+
 	static void AddParticleColor(int Color, int nSerect);		//色増減
 	static void AddParticleAddCol(int Color, int nSerect);	//色増減値の増減
 
@@ -278,6 +261,29 @@ public:
 			nParticleSynthetic = 0;
 		}
 	}	//合成
+
+	static void AddVtx(int Vtx) { m_nVtx += Vtx; }
+	static void AddType(int nType) { m_nType += nType; }	//球タイプ
+
+	static void AddTexMoveU(float MoveU) { m_TexMove.x += MoveU; }	//テクスチャU
+	static void AddTexMoveV(float MoveV) { m_TexMove.y += MoveV; }	//テクスチャV
+	static void AddTexNumU(float NumU) { m_TexNum.x += NumU; }	//テクスチャ枚数
+	static void AddTexNumV(float NumV) { m_TexNum.y += NumV; }	//テクスチャ枚数
+
+	static void AddSecondType(int SecondType) { m_nSecondTime += SecondType; }
+
+	static void AddTexPatternU(float PatternU) {m_TexPattern.x += PatternU;}	//テクスチャU
+	static void AddTexPatternV(float PatternV) { m_TexPattern.y += PatternV; }	//テクスチャV
+	static void AddAnimCont(int AnimCont) { m_nAnimCont += AnimCont; }	//テクスチャV
+	static void AddSplitU(float SplitU) { m_nSplit.x += SplitU; }	//テクスチャV
+	static void AddSplitV(float SplitU) { m_nSplit.y += SplitU; }	//テクスチャV
+	static void AddHigth(float Higth) { m_fHigth += Higth; }	//高さ
+	
+	static void AddContorolBezierX(float NumX) { m_ContorolBezier.x += NumX;}	//制御点
+	static void AddContorolBezierY(float NumY) { m_ContorolBezier.y += NumY;}	//制御点
+	static void AddContorolBezierZ(float NumZ) { m_ContorolBezier.z += NumZ;}	//制御点
+
+	static void AddSecondTex(int SecondTex) { m_SecondTex += SecondTex; }	//制御点
 
 private:
 	static CKeyboard *m_pKeyboard;
@@ -303,6 +309,8 @@ private:
 
 	static int nSynthetic;	//合成関係
 
+	static D3DXVECTOR2 m_TexMove;	//テクスチャ座標
+
 	//２D
 	static bool m_bMouseCursor;			//カーソル追従
 	static D3DXVECTOR2 m_move;	//初期の移動値
@@ -327,13 +335,26 @@ private:
 	static D3DCOLORVALUE m_ParticleAddCol;	//パーティクル色加算
 	static int nParticleSynthetic;	//パーティクル合成関係
 	static float ActiveAddSize;	//アクティブ中の大きさ変更
+	static int m_nSecondTime;	//２番目の時間
+	static int m_SecndType;	//2つ目のパターン選択
 
+	//球
+	static int m_nVtx;	//球頂点数
+	static int m_nType;	//タイプ
+
+	static D3DXVECTOR2 m_TexNum;	//テクスチャ枚数
 
 	//軌跡
 	static int m_ModelTrajecNum;	//軌跡先端
 	static D3DCOLORVALUE m_TrajectColor;		//色変更
 	static D3DCOLORVALUE m_TrajectChangeCol;	//色変更
 
+	static D3DXVECTOR2 m_TexPattern;
+	static int m_nAnimCont;	//アニメーションカウント
+	static D3DXVECTOR2 m_nSplit;	//分割数
+	static float m_fHigth;	//高さ
+	static D3DXVECTOR3 m_ContorolBezier;	//ベジェ制御点
+	static int m_SecondTex;
 };
 
 #endif

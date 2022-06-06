@@ -14,7 +14,7 @@ public:
 	CLoad();
 	~CLoad();
 	static void Load(const char *aModelName);
-	static void Load2D(const char *aModelName);	//ボタンの読み込み
+	static void LoadButten(const char *aModelName);	//ボタンの読み込み
 
 private:
 };
