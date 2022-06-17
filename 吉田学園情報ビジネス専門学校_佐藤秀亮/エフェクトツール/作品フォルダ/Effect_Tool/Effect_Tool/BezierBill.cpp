@@ -7,6 +7,10 @@
 
 #include "Trajectory.h"
 #include "control.h"
+
+#include "LoadEffect.h"
+#include "PresetSetEffect.h"
+
 //*****************************************************************************
 //コンストラクタ
 //*****************************************************************************
@@ -50,9 +54,10 @@ HRESULT CBezierBill::Init(D3DXVECTOR3 Size,
 	int TrajectLife,
 	float DistanceTarget,
 	int Synthetic,
-	int TrajectSynthetic)
+	int TrajectSynthetic,
+	ANIMPATTERN AnimPattern)
 {
-	CBillEffect::Init(Size, MinSize, color, Mincolor, nTex, nLife, TexNum, TexMove, nAnimCounter, nSplit);
+	CBillEffect::Init(Size, MinSize, color, Mincolor, nTex, nLife, TexNum, TexMove, nAnimCounter, nSplit, AnimPattern);
 
 	m_nSynthenic = Synthetic;
 	m_TrajectSynthetic = TrajectSynthetic;
@@ -254,7 +259,7 @@ void CBezierBill::Update()
 
 		m_Bezier.Counter++;
 		// もしカウンターが分割数に達していたら０に戻す
-		if (m_Bezier.Counter == m_Bezier.DivNum + 3)
+		if (m_Bezier.Counter == m_Bezier.DivNum + 1)
 		{
 			m_Bezier.Counter = 0;
 			m_Bezier.f = false;//削除
@@ -318,7 +323,8 @@ CBezierBill *CBezierBill::Create(D3DXVECTOR3 Size,
 	int TrajectLife,
 	float DistanceTarget,
 	int Synthetic,
-	int TrajectSynthetic)
+	int TrajectSynthetic,
+	ANIMPATTERN AnimPattern)
 {
 	CBezierBill * pBezierBill = NULL;
 	pBezierBill = new CBezierBill(CManager::PRIORITY_EFFECT);
@@ -342,7 +348,8 @@ CBezierBill *CBezierBill::Create(D3DXVECTOR3 Size,
 			TrajectLife,
 			DistanceTarget,
 			Synthetic,
-			TrajectSynthetic);
+			TrajectSynthetic,
+			AnimPattern);
 	}
 	return pBezierBill;
 

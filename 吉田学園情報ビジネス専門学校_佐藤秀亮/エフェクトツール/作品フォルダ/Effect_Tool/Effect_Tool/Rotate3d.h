@@ -16,8 +16,21 @@ public:
 		ACTIVE,
 		END,
 		MAX,
-	} EFFECT_TIME;
+	} EFFECT_TIME;	//エフェクトの状態
 
+	typedef enum
+	{
+		TYPE_PARTICLE,
+		TYPE_TRAJECT,
+		TYPE_MAX,
+	} EFFECT_TYPE;	//何のエフェクト出すか
+
+	typedef enum
+	{
+		TYPE_NOMAL,
+		TYPE_MOVERAND,
+		MOVETYPE_MAX,
+	} MOVE_TYPE;
 
 	CRotate3D(int nPriority);
 	~CRotate3D();
@@ -38,7 +51,10 @@ public:
 		int nLife,
 		int nParticleLife,
 		int nBuckTime,
-		float fActive);
+		float fActive,
+		int AnimPattern,
+		EFFECT_TYPE EffectType,
+		MOVE_TYPE MoveType);
 
 	void Uninit();
 	void Update();
@@ -59,14 +75,21 @@ public:
 		int nLife,
 		int nParticleLife,
 		int nBuckTime,
-		float m_fActive);
+		float fActive,
+		int AnimPattern,
+		EFFECT_TYPE EffectType,
+		MOVE_TYPE MoveType);
 
 private:
 	EFFECT_TIME m_EffectTime;
+	EFFECT_TYPE m_EffectType;
+	MOVE_TYPE m_MoveType;
 
 	bool m_bUninit;
 
 	D3DXVECTOR3 m_pos;
+	D3DXVECTOR3 m_Oldpos;
+
 	D3DXVECTOR3 m_Size;
 	D3DXVECTOR3 m_AddSize;
 	D3DCOLORVALUE m_Color;
@@ -87,7 +110,7 @@ private:
 	int m_nSynthetic;
 	int m_nLife;
 	int m_ParticleLife;
-
+	int m_PatternAnim;
 };
 
 #endif

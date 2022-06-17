@@ -59,6 +59,8 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 				fprintf(pFile, "	MOVE = %.1f					//スピード\n", CControl::GetMove().x);
 				fprintf(pFile, "	DIFFUSION = %d					//拡散率\n", CControl::GetDiffusion());
 				fprintf(pFile, "	DESTROYVEC = %d					//消えるベクトル\n", CControl::GetUninitVectl());
+				fprintf(pFile, "	DISTANCE = %.1f					//距離\n", CControl::GetDistance());
+
 			case(2):
 				fprintf(pFile, "	ROTATE = %.2f					//回転\n", CControl::GetRotate());
 				break;
@@ -153,6 +155,9 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 				fprintf(pFile, "	SECONDTIME = %d						//近づくまでの時間\n", CControl::GetSecondTime());
 				fprintf(pFile, "	MAXSIZE = %.1f						//アクティブサイズ\n", CControl::GetMaxSize());
 				fprintf(pFile, "	MOVE = %.1f						//距離加算\n", CControl::Getmove3d().x);
+				fprintf(pFile, "	TYPE = %d					//パーティクル(0)or軌跡(1)\n", CControl::GetType());
+				fprintf(pFile, "	SECONDTYPE = %d					//移動ランダム\n", CControl::GetSecondType());
+
 				break;
 			case(6):
 				fprintf(pFile, "	SIZE = %.1f						//大きさ\n", CControl::GetSize());
@@ -192,7 +197,8 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 
 				fprintf(pFile, "	DISTANCE = %.1f						//ターゲットからのランダム距離\n", CControl::GetDistance());
 				fprintf(pFile, "	SECONDSYNTHETIC = %d			//軌跡合成\n", (int)CControl::GetParticleSynthetic());
-
+				break;
+			case(9):
 				break;
 			default:
 				break;
@@ -211,6 +217,7 @@ void CIntermeiateSave::IntermeiateSave(CManager::MODE mode, int nPattern, const 
 
 			fprintf(pFile, "	TEXANIMCOUNT = %d					//テクスチャアニメーションカウント\n", CControl::GetAnimCont());
 			fprintf(pFile, "	TEXSPLIT = %.0f %.0f					//テクスチャ分割数\n", CControl::GetSplitU(), CControl::GetSplitV());
+			fprintf(pFile, "	ANIMPATTERNTYPE = %d					//アニメーションパターンタイプ\n", CControl::GetAnimPatternType());
 
 
 			fprintf(pFile, "END_EFFECTSTATE3D\n");
@@ -281,6 +288,7 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 
 	D3DXVECTOR3 ControlBezier = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	int SecondTex = 1;
+	int AnimPatternType = 0;
 #endif
 	if (pFile != NULL)
 	{
@@ -367,6 +375,12 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%d", &nSynthetic);
 					}
+					if (strcmp(&aFile[0], "DISTANCE") == 0)	//粒発生地点
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%f", &fDistance);
+					}
+
 				}
 
 				//エフェクト情報セット
@@ -398,6 +412,8 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 					CControl::SetUninitVectl(Destroyvec);
 					CControl::SetTexture(nTexture);
 					CControl::SetSynthetic(nSynthetic);
+					CControl::SetDistance(fDistance);
+
 				}
 			}
 			else if (mode == CManager::MODE_3D)
@@ -585,6 +601,12 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 						fscanf(pFile, "%s", &aFile[0]);
 						fscanf(pFile, "%f %f %f", &ControlBezier.x, &ControlBezier.y, &ControlBezier.z);
 					}
+					if (strcmp(&aFile[0], "ANIMPATTERNTYPE") == 0)	//アニメーションパターンタイプ
+					{
+						fscanf(pFile, "%s", &aFile[0]);
+						fscanf(pFile, "%d", &AnimPatternType);
+					}
+
 
 				}
 
@@ -632,7 +654,7 @@ void CIntermeiateSave::IntermeiateLoad(CManager::MODE mode, const char *aModelNa
 					CControl::SetHigth(fHigth);
 					CControl::SetSecondTex(SecondTex);
 					CControl::SetControlBezier(ControlBezier);
-
+					CControl::SetAnimPatternType(AnimPatternType);
 				}
 				if (strcmp(&aFile[0], "EFFECTSTATE3D") == 0)
 				{

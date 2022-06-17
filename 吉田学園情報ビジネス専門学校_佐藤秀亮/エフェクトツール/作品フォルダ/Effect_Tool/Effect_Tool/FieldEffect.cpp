@@ -44,7 +44,8 @@ HRESULT CFieldEffect::Init(D3DXVECTOR3 size,
 	float ActiveAddSize,
 	int FieldTime,
 	bool FieldCreate,
-	int CreatePreset)
+	int CreatePreset,
+	int AnimPatternType)
 {
 	CPlane::Init(size, pos, D3DXVECTOR2(1.0f, 1.0f));
 	CScene::SetObjType(OBJECTTYPE_EFFECT);
@@ -87,6 +88,7 @@ HRESULT CFieldEffect::Init(D3DXVECTOR3 size,
 	m_FieldCreate = FieldCreate;
 	m_CreatePreset = CreatePreset;
 	m_FieldTimedelta = FieldTime - 5;
+	m_AnimPatternType = AnimPatternType;
 	bUninit = false;
 	return S_OK;
 }
@@ -100,7 +102,6 @@ void CFieldEffect::Uninit()
 //XVˆ—
 void CFieldEffect::Update()
 {
-	m_pos = GetPos();
 
 	float fAngle;
 	float fAngle2;
@@ -190,7 +191,8 @@ void CFieldEffect::Update()
 					D3DXVECTOR2(0.0f, 0.0f),
 					D3DXVECTOR2(1.0f, 1.0f),
 					0,
-					D3DXVECTOR2(1.0f,1.0f));
+					D3DXVECTOR2(1.0f,1.0f),
+					(CBillEffect::ANIMPATTERN)m_AnimPatternType);
 			}
 
 		}
@@ -231,7 +233,8 @@ void CFieldEffect::Update()
 					D3DXVECTOR2(0.0f,0.0f),
 					D3DXVECTOR2(1.0f, 1.0f),
 					0,
-					D3DXVECTOR2(1.0f, 1.0f));
+					D3DXVECTOR2(1.0f, 1.0f),
+					(CBillEffect::ANIMPATTERN)m_AnimPatternType);
 				Time = (int)(rand() % nParticleTime) + 1;
 			}
 		}
@@ -241,7 +244,7 @@ void CFieldEffect::Update()
 			m_FieldTimedelta++;
 			if (m_FieldTimedelta >= m_FieldTime)
 			{
-				CPresetEffect::SetEffect3D(m_CreatePreset, D3DXVECTOR3(0.0f, 0.0f, 0.0f), {});
+				CPresetEffect::SetEffect3D(m_CreatePreset, D3DXVECTOR3(0.0f, 0.0f, 0.0f), {}, {});
 				m_FieldTimedelta = 0;
 			}
 		}
@@ -282,7 +285,8 @@ void CFieldEffect::Update()
 					D3DXVECTOR2(0.0f, 0.0f),
 					D3DXVECTOR2(1.0f, 1.0f),
 					0,
-					D3DXVECTOR2(1.0f, 1.0f));
+					D3DXVECTOR2(1.0f, 1.0f),
+					(CBillEffect::ANIMPATTERN)m_AnimPatternType);
 			}
 
 		}
@@ -402,7 +406,8 @@ CFieldEffect *CFieldEffect::Create(D3DXVECTOR3 size,
 	float ActiveAddSize,
 	int FieldTime,
 	bool FieldCreate,
-	int CreatePreset)
+	int CreatePreset,
+	int AnimPatternType)
 {
 	CFieldEffect *pFieldEffect;
 	pFieldEffect = new CFieldEffect(CManager::PRIORITY_EFFECT);
@@ -431,7 +436,8 @@ CFieldEffect *CFieldEffect::Create(D3DXVECTOR3 size,
 			ActiveAddSize,
 			FieldTime,
 			FieldCreate,
-			CreatePreset);
+			CreatePreset,
+			AnimPatternType);
 
 		pFieldEffect->SetTexture(nParticleTex);
 	}

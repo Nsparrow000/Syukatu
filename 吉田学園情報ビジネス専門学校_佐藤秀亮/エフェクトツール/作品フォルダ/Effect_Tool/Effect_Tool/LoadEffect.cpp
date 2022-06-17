@@ -96,7 +96,11 @@ void CLoadEffect::EffectStateLoad(const char *aFileName)
 	D3DXVECTOR2 TexSplit = D3DXVECTOR2(1.0f, 1.0f);
 	int nAnimCont = -1;
 	float fHigth = 30.0f;
-
+	int AnimPatternType = 0;
+	D3DXVECTOR3 ControlBezier = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	D3DCOLORVALUE Therdcol;
+	D3DCOLORVALUE TherdChangeColor;
+	int SecondTex = 0;
 #endif
 
 	if (pFile != NULL)
@@ -201,6 +205,11 @@ void CLoadEffect::EffectStateLoad(const char *aFileName)
 				{
 					fscanf(pFile, "%s", &aFile[0]);
 					fscanf(pFile, "%d", &nTexture);
+				}
+				if (strcmp(&aFile[0], "DISTANCE") == 0)		//発生距離
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%d", &Distance);
 				}
 
 			}
@@ -427,6 +436,31 @@ void CLoadEffect::EffectStateLoad(const char *aFileName)
 					fscanf(pFile, "%s", &aFile[0]);
 					fscanf(pFile, "%f", &fHigth);
 				}
+				if (strcmp(&aFile[0], "ANIMPATTERNTYPE") == 0)	//アニメーションパターンタイプ
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%d", &AnimPatternType);
+				}
+				if (strcmp(&aFile[0], "THERDCOLOR") == 0)	//パーティクルカラー
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%f %f %f %f", &Therdcol.r, &Therdcol.g, &Therdcol.b, &Therdcol.a);
+				}
+				if (strcmp(&aFile[0], "THERDADDCOLOR") == 0)	//パーティクルカラー
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%f %f %f %f", &TherdChangeColor.r, &TherdChangeColor.g, &TherdChangeColor.b, &TherdChangeColor.a);
+				}
+				if (strcmp(&aFile[0], "SECONDTEX") == 0)	//パーティクルカラー
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%d", &SecondTex);
+				}
+				if (strcmp(&aFile[0], "CONTROLBEZIER") == 0)	//パーティクルカラー
+				{
+					fscanf(pFile, "%s", &aFile[0]);
+					fscanf(pFile, "%f %f %f", &ControlBezier.x, &ControlBezier.y, &ControlBezier.z);
+				}
 
 			}
 			//エフェクト情報セット
@@ -438,7 +472,7 @@ void CLoadEffect::EffectStateLoad(const char *aFileName)
 			{
 				bEffectState2D = false;
 				CPresetEffect::SetEffectState2D(nPattern, pos, fRotate, move, Addmove, Diffusion, Destroyvec, fSize, fAddSize, col, ChangeColor, nLife, Density,
-					(bool)bRandColR, (bool)bRandColG, (bool)bRandColB, bMousePos, nSynthetic, nTexture);
+					(bool)bRandColR, (bool)bRandColG, (bool)bRandColB, bMousePos, nSynthetic, nTexture, (float)Distance);
 			}
 
 			//3Dエフェクト情報セット
@@ -455,7 +489,10 @@ void CLoadEffect::EffectStateLoad(const char *aFileName)
 					nSynthetic, nTexture, Distance, ParticleTime, pos, fActiveAddSize,
 					FieldTime, (bool)FieldCreate, CreatePreset,
 					nSecondTime, nVtx, nType, TexMove, TexNum, nSecondType, TexSplit,
-					nAnimCont, fHigth);
+					nAnimCont, fHigth, AnimPatternType,
+					ControlBezier,Therdcol,
+					TherdChangeColor,
+					SecondTex);
 
 				m_Total++;
 			}

@@ -41,6 +41,7 @@ public:
 		bool m_bMousePos;
 		int Synthetic;	//合成
 		int nTexture;	//テクスチャ
+		float m_Distance;	//距離
 	} EFFECT_STATE2D;
 
 	//3Dの情報
@@ -89,6 +90,11 @@ public:
 		D3DXVECTOR2 m_TexSplit;	//分割数
 		int AnimCnt;	//アニメーションカウント
 		float m_fHigth;	//高さ
+		int m_AnimPatternType;
+		D3DXVECTOR3 m_ControlBezier;
+		D3DCOLORVALUE m_TherdCol;			//3番目カラー
+		D3DCOLORVALUE m_TherdChangecolor;	//3番目カラー加算
+		int m_SecondTex;
 	} EFFECT_STATE3D;
 
 
@@ -97,7 +103,8 @@ public:
 
 
 	//読み込んだエフェクトの情報を格納するやつ
-	static void SetEffectState2D(int nPattern,
+	static void SetEffectState2D(
+		int nPattern,
 		D3DXVECTOR3 pos,
 		float fRotate,
 		D3DXVECTOR2 move,
@@ -115,7 +122,8 @@ public:
 		bool bColorRandB,
 		bool bMousePos,
 		int Synthetic,
-		int Texture);
+		int Texture,
+		float Distance);
 
 	//読み込んだエフェクトの情報を格納するやつ3D
 	static void SetEffectState3D(
@@ -161,8 +169,14 @@ public:
 		int m_nSecondType,
 		D3DXVECTOR2 m_TexSplit,
 		int AnimCnt,
-		float fHigth);
+		float fHigth,
+		int AnimPatternType,
+		D3DXVECTOR3 ControlBezier,
+		D3DCOLORVALUE TherdCol,
+		D3DCOLORVALUE TherdChangecolor,
+		int SecondTex);
 
+	//オーダー処理
 	typedef struct
 	{
 		int nDeley;
@@ -173,12 +187,14 @@ public:
 		bool bOne[MAX_ORDER_3D];
 	} ORDER_PRESET;
 
-	static void SetEffect2D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
-	static void SetEffect3D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
+	static void SetEffect2D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos, D3DXVECTOR3 PlayerPos, D3DXVECTOR3 rot);	//パターン番号、出現位置、比較位置、位置
+	static void SetEffect3D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos, D3DXVECTOR3 rot);	//パターン、出現位置、目標地点、回転
 
+
+	//ディレイ付き再生
 	void SetOrderPreset(int nDeley, int nPresetNum);
 	static void CallOrder3D(int nPattern, D3DXVECTOR3 pos, D3DXVECTOR3 Endpos);
-	void DeleySet(int nPattern);
+	//void DeleySet(int nPattern);
 
 	void CPresetEffect::SetOrder(int nOrder, int nPattern);
 

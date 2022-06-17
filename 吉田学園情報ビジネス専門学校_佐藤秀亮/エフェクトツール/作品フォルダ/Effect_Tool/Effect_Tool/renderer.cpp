@@ -114,7 +114,7 @@ HRESULT CRenderer::Init(HWND hWnd, bool bWindow)
 	D3DXCreateFont(m_pD3DDevice, 20, 0, 0, 0, FALSE, SHIFTJIS_CHARSET,
 		OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH, "Terminal", &m_pFont);		//文字の大きさ
 
-	m_pCamera = CCamera::Create(D3DXVECTOR3(0.0f, 200.0f, -300.0f), 400.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	m_pCamera = CCamera::Create(D3DXVECTOR3(0.0f, 200.0f, -300.0f), 700.0f, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	
 
 	return S_OK;
@@ -273,6 +273,8 @@ void CRenderer::DrawText()
 			nNum += sprintf(&str[nNum], "移動値 [+][-]：(%.1f)\n", CControl::GetMove().x);
 			nNum += sprintf(&str[nNum], "拡散率 [+][-]：(%.2f)\n", (float)CControl::GetDiffusion() / 100);
 			nNum += sprintf(&str[nNum], "消える距離 [+][-]：(%d)\n", CControl::GetUninitVectl());
+			nNum += sprintf(&str[nNum], "出現距離 [+][-]：(%.1f)\n", CControl::GetDistance());
+
 			nNum += sprintf(&str[nNum], "\n");
 			break;
 		case(2):
@@ -385,6 +387,8 @@ void CRenderer::DrawText()
 				nNum += sprintf(&str[nNum], "近づくまでの時間 [+][-]：%d\n", CControl::GetSecondTime());
 				nNum += sprintf(&str[nNum], "アクティブになるまでの大きさ [+][-]：%.1f\n", CControl::GetMaxSize());
 				nNum += sprintf(&str[nNum], "移動値[+][-]：%.1f\n", CControl::Getmove3d().x);
+				nNum += sprintf(&str[nNum], "エフェクトタイプ[+][-]：%d\n", CControl::GetType());
+				nNum += sprintf(&str[nNum], "移動タイプ[+][-]：%d\n", CControl::GetSecondType());
 
 				break;
 			case(6):
@@ -413,7 +417,8 @@ void CRenderer::DrawText()
 				nNum += sprintf(&str[nNum], "軌跡寿命 [+][-]：%d\n", CControl::GetParticleTime());
 				nNum += sprintf(&str[nNum], "ターゲットランダム距離 [+][-]：%.1f\n", CControl::GetDistance());
 				nNum += sprintf(&str[nNum], "軌跡合成 [+][-]：%d\n", CControl::GetParticleSynthetic());
-
+				break;
+			case(9):
 				break;
 			default:
 				break;
@@ -468,6 +473,7 @@ void CRenderer::DrawTextLeft()
 		nNum += sprintf(&str[nNum], "テクスチャ分割数 U [+][-]：%.0f\n", CControl::GetSplitU());
 		nNum += sprintf(&str[nNum], "テクスチャ分割数 V [+][-]：%.0f\n", CControl::GetSplitV());
 		nNum += sprintf(&str[nNum], "パターンカウント  [+][-]：%d\n", CControl::GetAnimCont());
+		nNum += sprintf(&str[nNum], "ランダム化  [+][-]：%d\n", CControl::GetAnimPatternType());
 
 
 		nNum += sprintf(&str[nNum], "プリセット再生[F1]\n");

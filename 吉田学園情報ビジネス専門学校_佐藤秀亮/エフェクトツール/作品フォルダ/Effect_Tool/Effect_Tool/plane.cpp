@@ -114,6 +114,7 @@ void CPlane::Draw()
 	//向きを反映
 	D3DXMatrixRotationYawPitchRoll(&mtxRot, GetRot().y, GetRot().x, GetRot().z);
 	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxRot);
+
 	//位置を反映
 	D3DXMatrixTranslation(&mtxTrans, GetPos().x, GetPos().y, GetPos().z);
 	D3DXMatrixMultiply(&mtxWorld, &mtxWorld, &mtxTrans);
@@ -376,7 +377,7 @@ void CPlane::SetTexAnim(D3DXVECTOR2 TexPattern, D3DXVECTOR2 TexAnimSize)
 }
 
 //=============================================================================
-//ビルボード座標いじり
+//座標
 //=============================================================================
 void CPlane::SetPosBill(D3DXVECTOR3 pos, D3DXVECTOR3 pos2, D3DXVECTOR3 pos3, D3DXVECTOR3 pos4)
 {

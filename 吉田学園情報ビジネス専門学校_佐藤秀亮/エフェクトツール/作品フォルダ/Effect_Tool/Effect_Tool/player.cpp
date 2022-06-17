@@ -49,7 +49,7 @@ HRESULT CPlayer::Init(D3DXVECTOR3 pos, D3DXVECTOR3 rot, const char *aFileName)
 	Load(aFileName);
 	SetObjType(CScene::OBJECTTYPE_PLAYER);
 	SetPos(pos);
-	SetRot(rot);
+	//SetRot(rot);
 	m_rotDesh = rot;
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_PosOld = pos;
@@ -296,9 +296,8 @@ void CPlayer::Update()
 	{
 		CreateEffect(0);
 	}
-	if (CControl::GetPattern() == 2)
-	{
-	}
+
+	//エフェクト発生
 	if (m_pMouse->GetMouseButton(CMouse::DIM_L) == true)
 	{
 		CreateEffect(CControl::GetPattern());
@@ -329,7 +328,6 @@ void CPlayer::Update()
 		m_MouseButtenPush = false;
 		m_MousePushTime = 0;
 	}
-
 	Motion();	//モデル動かし
 	SetRot(rot);	//回転
 }
@@ -459,7 +457,8 @@ void CPlayer::CreateEffect(int nPattern)
 				D3DXVECTOR2(CControl::GetTexMoveU(),CControl::GetTexMoveV()),
 				CControl::GetTexNum(),
 				CControl::GetAnimCont(),
-				D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()));
+				D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()),
+				(CBillEffect::ANIMPATTERN)CControl::GetAnimPatternType());
 		}
 		break;
 	case(8):
@@ -475,17 +474,30 @@ void CPlayer::CreateEffect(int nPattern)
 				D3DXVECTOR2(CControl::GetTexMoveU(), CControl::GetTexMoveV()),
 				CControl::GetAnimCont(),
 				D3DXVECTOR2(CControl::GetSplitU(), CControl::GetSplitV()),
-				D3DXVECTOR3(pos.x, pos.y + 30, pos.z),
-				D3DXVECTOR3(0.0f, 0.0f, 0.0f), CControl::Getmove3d().x,
-				D3DXVECTOR3(CControl::GetContorolBezierX(), CControl::GetContorolBezierY(), CControl::GetContorolBezierZ()),
-				rot,
+				D3DXVECTOR3(pos.x, pos.y + 2000, pos.z),
+				D3DXVECTOR3(
+					pos.x + sinf(m_pCamera->GetRotY()) * 0.0f,
+					0.0f,
+					pos.z + cosf(m_pCamera->GetRotY()) * 0.0f),
+
+				CControl::Getmove3d().x,
+
+				D3DXVECTOR3(CControl::GetContorolBezierX(),
+					CControl::GetContorolBezierY(),
+					CControl::GetContorolBezierZ()),
+					{},
 				CControl::GetMaxSize(),
 				D3DXCOLOR((float)CControl::GetParticleColor(1), (float)CControl::GetParticleColor(2), (float)CControl::GetParticleColor(3), (float)CControl::GetParticleColor(4)),
 				D3DXCOLOR((float)CControl::GetParticleAddCol(1), (float)CControl::GetParticleAddCol(2), (float)CControl::GetParticleAddCol(3), (float)CControl::GetParticleAddCol(4)),
 				D3DXCOLOR((float)CControl::GetTrajectColor(1), (float)CControl::GetTrajectColor(2), (float)CControl::GetTrajectColor(3), (float)CControl::GetTrajectColor(4)),
 				D3DXCOLOR((float)CControl::GetTrajectCol(1), (float)CControl::GetTrajectCol(2), (float)CControl::GetTrajectCol(3), (float)CControl::GetTrajectCol(4)),
-				0.0f,CControl::GetSecondTex(),CControl::GetParticleTime(),CControl::GetDistance(),CControl::GetSynthetic(),
-				CControl::GetParticleSynthetic()); 
+				0.0f,
+				CControl::GetSecondTex(),
+				CControl::GetParticleTime(),
+				CControl::GetDistance(),
+				CControl::GetSynthetic(),
+				CControl::GetParticleSynthetic(),
+				(CBillEffect::ANIMPATTERN)CControl::GetAnimPatternType()); 
 		}
 		break;
 	default:

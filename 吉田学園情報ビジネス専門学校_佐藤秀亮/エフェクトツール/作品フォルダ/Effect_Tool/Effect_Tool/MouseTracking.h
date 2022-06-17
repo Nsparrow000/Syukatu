@@ -23,7 +23,10 @@ public:
 		D3DXVECTOR3 Endpos,
 		int Diffusion,
 		int UninitVectl,
-		int Synthetic);
+		int Synthetic,
+		int Distance,
+		D3DXVECTOR3 Playerpos,
+		D3DXVECTOR3 rot);
 
 	void Uninit();
 	void Update();
@@ -39,12 +42,18 @@ public:
 		D3DXVECTOR3 Endpos,
 		int Diffusion,
 		int UninitVectl,
-		int Synthetic);
+		int Synthetic,
+		int Distance,
+		D3DXVECTOR3 Playerpos,
+		D3DXVECTOR3 rot);
 
 private:
+	D3DXVECTOR3 m_pos;
 	D3DXVECTOR2 m_move;
 	D3DXVECTOR3 m_Vec;
 	D3DXVECTOR3 m_Endpos;
+	D3DXVECTOR3 m_PlayerPos;
+	D3DXVECTOR3 m_SerectRot;
 
 	float m_fAngle;
 	float m_Vectl;

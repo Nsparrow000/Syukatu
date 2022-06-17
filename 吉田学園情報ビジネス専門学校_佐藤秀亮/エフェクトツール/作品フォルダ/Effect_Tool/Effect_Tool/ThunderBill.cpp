@@ -39,9 +39,10 @@ HRESULT CThunderBill::Init(D3DXVECTOR3 pos,
 	D3DXVECTOR2 nSplit,
 	float fHigth,
 	D3DXVECTOR3 orizinSize,
-	int Synthetic)
+	int Synthetic,
+	ANIMPATTERN AnimPattern)
 {
-	CBillEffect::Init(Size, MinSize, color, Mincolor, nTex, nLife, TexNum, TexMove, nAnimCounter, nSplit);
+	CBillEffect::Init(Size, MinSize, color, Mincolor, nTex, nLife, TexNum, TexMove, nAnimCounter, nSplit, AnimPattern);
 	int fDistance = (int)Destance;
 	float fRandAngle = CIRCLE2;
 	float fRandAngle2 = CIRCLE2;
@@ -168,7 +169,6 @@ void CThunderBill::Draw()
 
 	//ワールドマトリックスの設定
 	pDevice->SetTransform(D3DTS_WORLD, &mtxWorld);
-	SetMatrix(mtxWorld);
 	//頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, GetVtx(), 0, sizeof(VERTEX_3D));
 
@@ -180,7 +180,7 @@ void CThunderBill::Draw()
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
 		0,  //開始する始点のインデックス
 		2); //描画するプリミティブ数
-			//カリングオン
+	//カリングオン
 	pDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 			//Zテスト関係
@@ -221,7 +221,8 @@ CThunderBill *CThunderBill::Create(D3DXVECTOR3 pos,
 	D3DXVECTOR2 nSplit,
 	float fHigth,
 	D3DXVECTOR3 orizinSize,
-	int Synthetic)
+	int Synthetic,
+	ANIMPATTERN AnimPattern)
 {
 	CThunderBill *pThunderBill = new CThunderBill(CManager::PRIORITY_EFFECT);
 
@@ -230,7 +231,7 @@ CThunderBill *CThunderBill::Create(D3DXVECTOR3 pos,
 		pThunderBill->Init(pos, Size, MinSize, color, Mincolor, nTex, nLife, Destance, TexMove,
 			TexNum, nAnimCounter, nSplit, fHigth,
 			orizinSize,
-			Synthetic);
+			Synthetic, AnimPattern);
 	}
 
 	return pThunderBill;
